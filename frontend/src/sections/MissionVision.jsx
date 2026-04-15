@@ -1,66 +1,63 @@
-import { motion } from "framer-motion";
+ import { motion } from "framer-motion";
 import Container from "../components/common/Container";
 
 const PINK = "#E8194B";
 const ORANGE = "#F06A00";
 const GREEN = "#5aaa00";
-const VIOLET = "#8B5CF6";
 
-const values = [
+const items = [
   {
     number: "01",
-    title: "Compassion",
-    desc: "We treat every child with empathy, patience, and genuine care to create a supportive environment.",
+    label: "Purpose",
+    title: "Our Mission",
+    desc: "To empower children with autism through personalized ABA therapy, helping them develop essential life skills and achieve meaningful progress.",
     accent: PINK,
     accentBg: "#fff0f3",
     icon: (
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <path d="M11 4C8 4 5.5 6 4 8.5c0 0 2 4 7 4s7-4 7-4C16.5 6 14 4 11 4Z" stroke={PINK} strokeWidth="1.6" strokeLinejoin="round" />
-        <path d="M11 4V2M7.5 5L6 3.5M14.5 5L16 3.5M4 8.5H2M20 8.5h-2" stroke={PINK} strokeWidth="1.6" strokeLinecap="round" />
-        <circle cx="11" cy="9" r="2" stroke={PINK} strokeWidth="1.6" />
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="9" stroke={PINK} strokeWidth="1.6" />
+        <circle cx="12" cy="12" r="5" stroke={PINK} strokeWidth="1.6" />
+        <circle cx="12" cy="12" r="1.5" fill={PINK} />
+        <path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke={PINK} strokeWidth="1.6" strokeLinecap="round" />
       </svg>
     ),
   },
   {
     number: "02",
-    title: "Individualized Care",
-    desc: "Every child is unique, and we tailor our therapy plans to fit their specific needs and strengths.",
+    label: "Future",
+    title: "Our Vision",
+    desc: "To create a future where every child with autism has the support, confidence, and opportunities to thrive independently.",
     accent: ORANGE,
     accentBg: "#fff5ee",
     icon: (
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <circle cx="11" cy="11" r="7" stroke={ORANGE} strokeWidth="1.6" />
-        <circle cx="11" cy="11" r="2.5" stroke={ORANGE} strokeWidth="1.6" />
-        <path d="M11 4V2M11 20v-2M4 11H2M20 11h-2" stroke={ORANGE} strokeWidth="1.6" strokeLinecap="round" />
-        <path d="M6.3 6.3l-1.4-1.4M17.1 17.1l-1.4-1.4M6.3 15.7l-1.4 1.4M17.1 4.9l-1.4 1.4" stroke={ORANGE} strokeWidth="1.6" strokeLinecap="round" />
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"
+          stroke={ORANGE}
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+        />
+        <circle cx="12" cy="12" r="3" stroke={ORANGE} strokeWidth="1.6" />
+        <path d="M12 9v0" stroke={ORANGE} strokeWidth="2" strokeLinecap="round" />
       </svg>
     ),
   },
   {
     number: "03",
-    title: "Integrity",
-    desc: "We are committed to transparency, honesty, and ethical practices in everything we do.",
+    label: "Promise",
+    title: "Our Commitment",
+    desc: "We are committed to delivering compassionate care, measurable results, and continuous support for both children and their families.",
     accent: GREEN,
     accentBg: "#f2faeb",
     icon: (
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <path d="M11 3L4 7v5c0 4.4 3 8.5 7 9.5 4-1 7-5.1 7-9.5V7L11 3Z" stroke={GREEN} strokeWidth="1.6" strokeLinejoin="round" />
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"
+          stroke={GREEN}
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+        />
         <path d="M8 11l2 2 4-4" stroke={GREEN} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-  },
-  {
-    number: "04",
-    title: "Collaboration",
-    desc: "We work closely with families, caregivers, and educators to ensure consistent progress.",
-    accent: VIOLET,
-    accentBg: "#f3f0ff",
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <circle cx="8" cy="7" r="3" stroke={VIOLET} strokeWidth="1.6" />
-        <circle cx="15" cy="8.5" r="2.5" stroke={VIOLET} strokeWidth="1.6" />
-        <path d="M2 18c0-3 2.7-5 6-5s6 2 6 5" stroke={VIOLET} strokeWidth="1.6" strokeLinecap="round" />
-        <path d="M16 14c2 0 4 1.2 4 4" stroke={VIOLET} strokeWidth="1.6" strokeLinecap="round" />
       </svg>
     ),
   },
@@ -74,14 +71,14 @@ const cardVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      delay: i * 0.12,
+      delay: i * 0.14,
       duration: 0.6,
       ease: easeOut,
     },
   }),
 };
 
-function ValueCard({ item, i }) {
+function MVCard({ item, i }) {
   return (
     <motion.div
       custom={i}
@@ -95,9 +92,9 @@ function ValueCard({ item, i }) {
       }}
       style={{
         background: "#ffffff",
-        borderRadius: 20,
+        borderRadius: 22,
         border: "1.5px solid #f0eff0",
-        padding: "28px 24px 26px",
+        padding: "32px 28px 28px",
         display: "flex",
         flexDirection: "column",
         cursor: "default",
@@ -115,14 +112,14 @@ function ValueCard({ item, i }) {
           right: 0,
           height: 3,
           background: item.accent,
-          borderRadius: "20px 20px 0 0",
+          borderRadius: "22px 22px 0 0",
           transformOrigin: "left",
         }}
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}
         transition={{
-          delay: i * 0.12 + 0.3,
+          delay: i * 0.14 + 0.3,
           duration: 0.5,
           ease: "easeOut",
         }}
@@ -134,25 +131,40 @@ function ValueCard({ item, i }) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "flex-start",
-          marginBottom: 20,
+          marginBottom: 22,
         }}
       >
-        <span
-          style={{
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.1em",
-            color: item.accent,
-            fontFamily: "'Inter', sans-serif",
-          }}
-        >
-          {item.number}
-        </span>
+        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: item.accent,
+              fontFamily: "'Inter', sans-serif",
+            }}
+          >
+            {item.label}
+          </span>
+          <span
+            style={{
+              fontSize: 13,
+              fontWeight: 800,
+              color: "#d1d5db",
+              fontFamily: "'Inter', sans-serif",
+              letterSpacing: "-0.02em",
+            }}
+          >
+            {item.number}
+          </span>
+        </div>
+
         <div
           style={{
-            width: 42,
-            height: 42,
-            borderRadius: 12,
+            width: 46,
+            height: 46,
+            borderRadius: 14,
             background: item.accentBg,
             display: "flex",
             alignItems: "center",
@@ -166,12 +178,12 @@ function ValueCard({ item, i }) {
       {/* Title */}
       <h3
         style={{
-          fontSize: 17,
-          fontWeight: 700,
+          fontSize: 19,
+          fontWeight: 800,
           color: "#111111",
-          margin: "0 0 10px",
+          margin: "0 0 12px",
           lineHeight: 1.25,
-          letterSpacing: "-0.02em",
+          letterSpacing: "-0.025em",
           fontFamily: "'Inter', sans-serif",
         }}
       >
@@ -181,10 +193,10 @@ function ValueCard({ item, i }) {
       {/* Desc */}
       <p
         style={{
-          fontSize: 14,
+          fontSize: 14.5,
           color: "#6b7280",
           margin: 0,
-          lineHeight: 1.65,
+          lineHeight: 1.7,
           fontFamily: "'Inter', sans-serif",
         }}
       >
@@ -194,10 +206,10 @@ function ValueCard({ item, i }) {
       {/* Bottom accent line */}
       <motion.div
         style={{
-          marginTop: 22,
+          marginTop: 24,
           height: 3,
           borderRadius: 4,
-          maxWidth: 44,
+          maxWidth: 48,
           background: item.accent,
           transformOrigin: "left",
         }}
@@ -205,7 +217,7 @@ function ValueCard({ item, i }) {
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}
         transition={{
-          delay: i * 0.12 + 0.5,
+          delay: i * 0.14 + 0.5,
           duration: 0.45,
           ease: "easeOut",
         }}
@@ -214,7 +226,7 @@ function ValueCard({ item, i }) {
   );
 }
 
-function CoreValues() {
+function MissionVision() {
   return (
     <section
       className="relative overflow-hidden"
@@ -222,12 +234,12 @@ function CoreValues() {
     >
       {/* Decorative blurs */}
       <div
-        className="absolute top-0 right-[15%] w-72 h-72 rounded-full opacity-[0.06] blur-3xl pointer-events-none"
-        style={{ background: VIOLET }}
+        className="absolute top-10 left-[10%] w-72 h-72 rounded-full opacity-[0.07] blur-3xl pointer-events-none"
+        style={{ background: PINK }}
       />
       <div
-        className="absolute bottom-0 left-[10%] w-64 h-64 rounded-full opacity-[0.07] blur-3xl pointer-events-none"
-        style={{ background: ORANGE }}
+        className="absolute bottom-10 right-[10%] w-64 h-64 rounded-full opacity-[0.06] blur-3xl pointer-events-none"
+        style={{ background: GREEN }}
       />
 
       <Container className="relative py-16 md:py-28">
@@ -255,36 +267,36 @@ function CoreValues() {
             viewport={{ once: true }}
             transition={{ delay: 0.1, duration: 0.5 }}
           >
-            What drives us
+            Who we are
           </motion.span>
 
           <h2
-            style={{
-              fontSize: "clamp(2rem, 4vw, 4.75rem)",
-              fontWeight: 800,
-              color: "#0f0f0f",
-              letterSpacing: "-0.035em",
-              lineHeight: 1.1,
-              margin: "0 0 22px",
-              fontFamily: "'Inter', sans-serif",
-            }}
-          >
-            Our Core{" "}
-            <span style={{ color: PINK }}>Values</span>
-          </h2>
+              style={{
+                fontSize: "clamp(2rem, 4vw, 4.75rem)",
+                fontWeight: 800,
+                color: "#0f0f0f",
+                letterSpacing: "-0.035em",
+                lineHeight: 1.1,
+                margin: "0 0 22px",
+                fontFamily: "'Inter', sans-serif",
+              }}
+            >
+              Mission, Vision &{" "}
+              <span style={{ color: PINK }}>Commitment</span>
+            </h2>
 
           <p
             style={{
-              fontSize: 18,
+              fontSize: 17,
               color: "#6b7280",
               lineHeight: 1.7,
-              maxWidth: 480,
+              maxWidth: 460,
               margin: "0 auto",
               fontFamily: "'Inter', sans-serif",
             }}
           >
-            Our work is guided by strong values that shape every
-            interaction, every decision, and every success story.
+            Everything we do is guided by purpose, driven by care, and
+            focused on your child's success.
           </p>
         </motion.div>
 
@@ -293,12 +305,12 @@ function CoreValues() {
           style={{
             marginTop: 56,
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
-            gap: 20,
+            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+            gap: 22,
           }}
         >
-          {values.map((item, i) => (
-            <ValueCard key={i} item={item} i={i} />
+          {items.map((item, i) => (
+            <MVCard key={i} item={item} i={i} />
           ))}
         </div>
       </Container>
@@ -306,4 +318,4 @@ function CoreValues() {
   );
 }
 
-export default CoreValues;
+export default MissionVision;

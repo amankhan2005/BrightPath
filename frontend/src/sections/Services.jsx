@@ -1,270 +1,346 @@
-import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import autismImg from "../assets/services/autism-therapy.jpeg";
-import behavioralImg from "../assets/services/behavioral-therapy.jpg";
-import parentImg from "../assets/services/parent-training.webp";
-import socialImg from "../assets/services/social-skills.jpg";
+import { motion } from "framer-motion";
+import Container from "../components/common/Container";
+import { Link } from "react-router-dom";
 
-/* ─── Data ────────────────────────────────────────────────────── */
+const PINK = "#E8194B";
+const ORANGE = "#F06A00";
+const GREEN = "#5aaa00";
+const VIOLET = "#8B5CF6";
+
 const services = [
   {
-    title: "Autism Therapy",
-    desc: "Personalized, evidence-based programs designed around each child's unique strengths and developmental pace.",
-    image: autismImg,
-    tag: "Individual",
+    id: "communication",
+    number: "01",
+    label: "Service",
+    title: "Communication & Language Development",
+    desc: "Communication is a foundational skill that shapes how children interact with the world. Our ABA therapy programs focus on helping children improve both verbal and non-verbal communication. We guide children to express needs, follow instructions, and build meaningful conversations.",
+    desc2: "Each therapy plan is personalized based on the child's abilities and goals. We also work closely with families to ensure communication skills are reinforced at home, leading to consistent and lasting progress.",
+    accent: PINK,
+    accentBg: "#fff0f3",
+    image: "/service/communication.jpg",
+    imageAlt: "Communication therapy session",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2a3 3 0 0 0-3 3v4a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" stroke={PINK} strokeWidth="1.6" strokeLinecap="round" />
+        <path d="M19 10v1a7 7 0 0 1-14 0v-1" stroke={PINK} strokeWidth="1.6" strokeLinecap="round" />
+        <path d="M12 18v4M8 22h8" stroke={PINK} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
   },
   {
-    title: "Behavioral Therapy",
-    desc: "Structured strategies rooted in ABA science to encourage lasting positive behavioral outcomes.",
-    image: behavioralImg,
-    tag: "Evidence-Based",
+    id: "social",
+    number: "02",
+    label: "Service",
+    title: "Social Interaction Skills",
+    desc: "Social interaction can be challenging for children with autism. Our structured ABA therapy helps children learn essential social behaviors like eye contact, turn-taking, and understanding social cues.",
+    desc2: "We create supportive environments where children can practice real-life interactions. This helps build confidence, improve relationships, and develop emotional understanding over time.",
+    accent: ORANGE,
+    accentBg: "#fff5ee",
+    image: "/service/social.jpg",
+    imageAlt: "Social skills group therapy",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <circle cx="9" cy="7" r="3" stroke={ORANGE} strokeWidth="1.6" />
+        <circle cx="17" cy="7" r="2.5" stroke={ORANGE} strokeWidth="1.6" />
+        <path d="M2 20c0-3.5 3.1-6 7-6s7 2.5 7 6" stroke={ORANGE} strokeWidth="1.6" strokeLinecap="round" />
+        <path d="M17.5 14c2.5.5 4.5 2.3 4.5 6" stroke={ORANGE} strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+    ),
   },
   {
-    title: "Parent Training",
-    desc: "Equipping caregivers with practical tools to extend therapeutic progress into everyday home life.",
-    image: parentImg,
-    tag: "Family",
+    id: "behavior",
+    number: "03",
+    label: "Service",
+    title: "Behavior Management",
+    desc: "Our behavior management programs focus on understanding and improving challenging behaviors. Using ABA techniques, we identify triggers and replace negative behaviors with positive alternatives.",
+    desc2: "We work closely with families to ensure consistency across home and therapy settings. This helps children develop better focus, emotional regulation, and independence.",
+    accent: GREEN,
+    accentBg: "#f2faeb",
+    image: "/service/behavior.jpg",
+    imageAlt: "Behavior management therapy",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Z" stroke={GREEN} strokeWidth="1.6" />
+        <path d="M8 12l3 3 5-6" stroke={GREEN} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
   },
   {
-    title: "Social Skills",
-    desc: "Building confidence, communication, and peer relationships through structured group sessions.",
-    image: socialImg,
-    tag: "Group",
+    id: "play",
+    number: "04",
+    label: "Service",
+    title: "Play & Learning Skills",
+    desc: "Play is a powerful way for children to learn and grow. Our play-based ABA therapy helps develop cognitive, attention, and problem-solving skills in an engaging way.",
+    desc2: "We use structured activities that promote independence, focus, and creativity. This approach ensures children enjoy learning while building essential life skills.",
+    accent: VIOLET,
+    accentBg: "#f3f0ff",
+    image: "/service/play.jpg",
+    imageAlt: "Play-based learning session",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L2 7l10 5 10-5-10-5Z" stroke={VIOLET} strokeWidth="1.6" strokeLinejoin="round" />
+        <path d="M2 17l10 5 10-5" stroke={VIOLET} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M2 12l10 5 10-5" stroke={VIOLET} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
   },
 ];
 
-/* ─── Icons ───────────────────────────────────────────────────── */
-const icons = {
-  "Autism Therapy": (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <circle cx="12" cy="12" r="10" />
-      <circle cx="12" cy="12" r="3" />
-      <line x1="12" y1="2" x2="12" y2="6" />
-      <line x1="12" y1="18" x2="12" y2="22" />
-      <line x1="2" y1="12" x2="6" y2="12" />
-      <line x1="18" y1="12" x2="22" y2="12" />
-    </svg>
-  ),
-  "Behavioral Therapy": (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="3,17 7,11 11,13 15,7 19,9 23,3" />
-      <circle cx="23" cy="3" r="1.5" fill="currentColor" stroke="none" />
-    </svg>
-  ),
-  "Parent Training": (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <circle cx="9" cy="8" r="3.5" />
-      <circle cx="16" cy="8" r="3.5" />
-      <path d="M2 21c0-4 3-7 7-7" />
-      <path d="M22 21c0-4-3-7-7-7" />
-      <path d="M9 14c2-1 5-1 7 0" />
-    </svg>
-  ),
-  "Social Skills": (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <path d="M5 18c0-5 3.5-8 7-8s7 3 7 8" />
-      <circle cx="12" cy="7" r="4" />
-      <path d="M8 21l4-5 4 5" />
-    </svg>
-  ),
-};
+const easeOut = [0.16, 1, 0.3, 1];
 
-/* ─── Card ────────────────────────────────────────────────────── */
-function ServiceCard({ service, index }) {
-  const navigate = useNavigate();
-  const cardRef = useRef(null);
-
-  useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
-    const timer = setTimeout(() => {
-      el.style.opacity = "1";
-      el.style.transform = "translateY(0)";
-    }, 120 + index * 110);
-    return () => clearTimeout(timer);
-  }, [index]);
+function ServiceBlock({ service, index }) {
+  const isReversed = index % 2 !== 0;
 
   return (
-    <div
-      ref={cardRef}
-      className="service-card group flex flex-col rounded-[20px] overflow-hidden cursor-pointer"
-      style={{
-        opacity: 0,
-        transform: "translateY(28px)",
-        transition: "opacity 0.55s ease, transform 0.55s ease",
-        boxShadow: "0 12px 36px rgba(13,37,80,0.18)",
-        background: "linear-gradient(145deg, #0D2550 0%, #123068 60%, #185FA5 100%)",
-      }}
-      onClick={() => navigate("/services")}
+    <section
+      id={service.id}
+className="pt-10 pb-16 md:pt-14 md:pb-20"
+      style={{ background: index % 2 === 0 ? "#ffffff" : "#FAFAF8" }}
     >
-      {/* Image — clean, no overlay, no filters */}
-      <div className="relative overflow-hidden rounded-t-[20px]" style={{ height: "200px", flexShrink: 0 }}>
-        <img
-          src={service.image}
-          alt={service.title}
-          className="w-full h-full object-cover rounded-t-[20px] transition-transform duration-500 ease-out group-hover:scale-105"
-        />
-
-        {/* Tag pill — bright readable on any image */}
-        <span
-          className="absolute top-3 left-3 text-[10px] font-semibold uppercase tracking-[1.5px] px-3 py-1 rounded-full"
-          style={{
-            background: "rgba(255,255,255,0.9)",
-            color: "#0D2550",
-          }}
-        >
-          {service.tag}
-        </span>
-
-        {/* Icon circle — bright readable on any image */}
+      <Container>
         <div
-          className="absolute bottom-3 right-3 w-9 h-9 rounded-full flex items-center justify-center"
-          style={{
-            background: "rgba(255,255,255,0.9)",
-            color: "#0D2550",
-          }}
+          className="grid md:grid-cols-2 gap-10 md:gap-16 items-center"
+          style={{ direction: isReversed ? "rtl" : "ltr" }}
         >
-          {icons[service.title]}
+          {/* Image */}
+          <motion.div
+            className="relative"
+            initial={{ opacity: 0, x: isReversed ? 40 : -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{
+              duration: 0.7,
+              ease: easeOut,
+              delay: 0.1,
+            }}
+            style={{ direction: "ltr" }}
+          >
+            <div className="relative overflow-hidden rounded-2xl group">
+              <img
+                src={service.image}
+                alt={service.imageAlt}
+                className="w-full h-[300px] md:h-[400px] object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+              {/* Accent overlay gradient */}
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                style={{
+                  background: `linear-gradient(to top, ${service.accent}15, transparent 60%)`,
+                }}
+              />
+            </div>
+
+            {/* Floating number badge */}
+            <motion.div
+              className="absolute -bottom-4 -right-4 md:-bottom-5 md:-right-5 w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center shadow-lg"
+              style={{ background: service.accent }}
+              initial={{ opacity: 0, scale: 0.6 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.5,
+                ease: easeOut,
+                delay: 0.4,
+              }}
+            >
+              <span
+                className="text-white font-extrabold text-lg md:text-xl"
+                style={{ fontFamily: "'Inter', sans-serif", letterSpacing: "-0.02em" }}
+              >
+                {service.number}
+              </span>
+            </motion.div>
+          </motion.div>
+
+          {/* Content */}
+          <motion.div
+            style={{ direction: "ltr" }}
+            initial={{ opacity: 0, y: 36 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{
+              duration: 0.65,
+              ease: easeOut,
+              delay: 0.2,
+            }}
+          >
+            {/* Label row */}
+            <div className="flex items-center gap-3 mb-5">
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                style={{ background: service.accentBg }}
+              >
+                {service.icon}
+              </div>
+              <span
+                className="text-xs font-bold uppercase tracking-widest"
+                style={{
+                  color: service.accent,
+                  fontFamily: "'Inter', sans-serif",
+                }}
+              >
+                {service.label}
+              </span>
+            </div>
+
+            {/* Title */}
+            <h2
+              className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-neutral-900 leading-tight"
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                letterSpacing: "-0.03em",
+              }}
+            >
+              {service.title}
+            </h2>
+
+            {/* Description */}
+            <div className="mt-6 space-y-4">
+              <p
+                className="text-neutral-600 leading-relaxed text-[15px] md:text-base"
+                style={{ fontFamily: "'Inter', sans-serif" }}
+              >
+                {service.desc}
+              </p>
+              <p
+                className="text-neutral-500 leading-relaxed text-[15px] md:text-base"
+                style={{ fontFamily: "'Inter', sans-serif" }}
+              >
+                {service.desc2}
+              </p>
+            </div>
+
+            {/* Accent underline */}
+            <motion.div
+              className="mt-8 h-[3px] rounded-full"
+              style={{
+                maxWidth: 64,
+                background: service.accent,
+              }}
+              initial={{ scaleX: 0, originX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.5,
+                ease: "easeOut",
+                delay: 0.5,
+              }}
+            />
+
+            {/* CTA Link */}
+            <motion.div
+              className="mt-6"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.6, duration: 0.4 }}
+            >
+              <Link
+                to={`/services `}
+                className="inline-flex items-center gap-2 text-sm font-semibold transition-colors duration-200"
+                style={{
+                  color: service.accent,
+                  fontFamily: "'Inter', sans-serif",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.gap = "10px")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.gap = "8px")
+                }
+              >
+                Learn more
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  style={{ transition: "transform 0.2s ease" }}
+                >
+                  <path
+                    d="M3 8h10M9 4l4 4-4 4"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Link>
+            </motion.div>
+          </motion.div>
         </div>
-      </div>
+      </Container>
+    </section>
+  );
+}
 
-      {/* Content */}
-      <div className="flex flex-col items-center text-center px-5 pt-5 pb-6 gap-3 flex-1">
-        <h3
-          className="text-white font-bold uppercase tracking-[1.5px]"
-          style={{
-            fontFamily: "'Rajdhani', sans-serif",
-            fontSize: "17px",
-            lineHeight: "1.2",
-          }}
-        >
-          {service.title}
-        </h3>
-        <div
-          className="w-8 h-px"
-          style={{ background: "rgba(0,180,240,0.5)" }}
+function Services() {
+  return (
+    <div style={{ fontFamily: "'Inter', sans-serif" }}>
+      <style>
+        {`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');`}
+      </style>
+
+      {/* ─── HERO ─── */}
+      <section className="relative overflow-hidden">
+        
+    
+<Container className="relative pt-20 pb-6 md:pt-20 md:pb-8 text-center">
+              <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: easeOut }}
+          >
+            <span
+              className="inline-block text-xs font-bold uppercase tracking-[0.12em] mb-5"
+              style={{ color: PINK, fontFamily: "'Inter', sans-serif" }}
+            >
+              What we offer
+            </span>
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: easeOut, delay: 0.1 }}
+            className="text-neutral-900 leading-[1.08]"
+            style={{
+              fontSize: "clamp(2.2rem, 5vw, 4.5rem)",
+              fontWeight: 900,
+              letterSpacing: "-0.04em",
+              fontFamily: "'Inter', sans-serif",
+            }}
+          >
+            Our ABA Therapy{" "}
+            <span style={{ color: PINK }}>Services</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: easeOut, delay: 0.25 }}
+            className="mt-7 text-neutral-500 max-w-xl mx-auto leading-relaxed text-base md:text-lg"
+            style={{ fontFamily: "'Inter', sans-serif" }}
+          >
+          Helping children with autism build communication, behavior, and social skills through personalized ABA therapy.
+          </motion.p>
+
+           
+        </Container>
+      </section>
+
+      {/* ─── SERVICE BLOCKS ─── */}
+      {services.map((service, index) => (
+        <ServiceBlock
+          key={service.id}
+          service={service}
+          index={index}
         />
-        <p
-          className="text-sm leading-relaxed flex-1"
-          style={{ color: "rgba(255,255,255,0.65)", lineHeight: "1.65" }}
-        >
-          {service.desc}
-        </p>
+      ))}
 
-        {/* CTA */}
-        <button
-          className="know-more-btn mt-1 px-6 py-2 rounded-lg text-sm font-semibold tracking-wide"
-          style={{
-            border: "1.5px solid rgba(255,255,255,0.45)",
-            background: "transparent",
-            color: "#ffffff",
-            fontFamily: "'Rajdhani', sans-serif",
-            fontSize: "13px",
-            letterSpacing: "1px",
-            textTransform: "uppercase",
-            transition: "background 0.25s ease, color 0.25s ease, border-color 0.25s ease",
-          }}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate("/services");
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "#ffffff";
-            e.currentTarget.style.color = "#0D2550";
-            e.currentTarget.style.borderColor = "#ffffff";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "#ffffff";
-            e.currentTarget.style.borderColor = "rgba(255,255,255,0.45)";
-          }}
-        >
-          Know More
-        </button>
-      </div>
+       
     </div>
   );
 }
 
-/* ─── Section ─────────────────────────────────────────────────── */
-export default function ServicesSection() {
-  const headingRef = useRef(null);
-
-  useEffect(() => {
-    const el = headingRef.current;
-    if (!el) return;
-    setTimeout(() => {
-      el.style.opacity = "1";
-      el.style.transform = "translateY(0)";
-    }, 60);
-  }, []);
-
-  return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap');
-        .service-card {
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .service-card:hover {
-          transform: translateY(-6px) !important;
-          box-shadow: 0 22px 48px rgba(13,37,80,0.26) !important;
-        }
-      `}</style>
-
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-
-          {/* Heading */}
-          <div
-            ref={headingRef}
-            className="text-center mb-14"
-            style={{
-              opacity: 0,
-              transform: "translateY(16px)",
-              transition: "opacity 0.6s ease, transform 0.6s ease",
-            }}
-          >
-            <p
-              className="uppercase mb-3"
-              style={{
-                fontSize: "11px",
-                letterSpacing: "4px",
-                color: "rgba(13,37,80,0.45)",
-                fontFamily: "'Rajdhani', sans-serif",
-                fontWeight: 600,
-              }}
-            >
-              What We Offer
-            </p>
-            <h2
-              className="font-bold uppercase"
-              style={{
-                fontFamily: "'Rajdhani', sans-serif",
-                fontSize: "clamp(26px, 3.5vw, 38px)",
-                letterSpacing: "3px",
-                lineHeight: 1.1,
-                color: "#0D2550",
-              }}
-            >
-              Our{" "}
-              <span style={{ color: "#00B4F0" }}>Services</span>
-            </h2>
-            <div
-              className="mx-auto mt-4 rounded-full"
-              style={{ width: "40px", height: "3px", background: "#00B4F0" }}
-            />
-          </div>
-
-          {/* Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {services.map((s, i) => (
-              <ServiceCard key={s.title} service={s} index={i} />
-            ))}
-          </div>
-
-        </div>
-      </section>
-    </>
-  );
-}
+export default Services;

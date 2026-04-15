@@ -1,197 +1,166 @@
-import { NavLink } from "react-router-dom";
 import { useState } from "react";
-import Container from "./Container";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../../assets/logo/logo.png";
 
-const MenuIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-    <line x1="3" y1="6" x2="21" y2="6" />
-    <line x1="3" y1="12" x2="21" y2="12" />
-    <line x1="3" y1="18" x2="21" y2="18" />
-  </svg>
-);
-
-const CloseIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-);
-
 const navLinks = [
-  { to: "/", label: "Home" },
-  { to: "/about-us", label: "About" },
-  { to: "/services", label: "Services" },
-  { to: "/faq", label: "FAQ" },
+  { label: "Home", to: "/" },
+  { label: "About", to: "/about-us" },
+  { label: "Services", to: "/services" },
+  { label: "FAQ", to: "/faq" },
 ];
 
-export default function Navbar({ topBarVisible }) {
-  const [open, setOpen] = useState(false);
+function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   return (
-    <>
-      {/* Load Rajdhani font */}
-      <link
-        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap"
-        rel="stylesheet"
-      />
+    <header className="sticky top-0 z-50 bg-white border-b border-slate-200" style={{ fontFamily: "'Inter', sans-serif" }}>
+      <div className="max-w-7xl mx-auto px-6" style={{ height: "68px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
 
-      <nav
-        className={`w-full sticky z-50 bg-white border-b border-[#0D2550]/10 transition-all duration-300 ${
-topBarVisible ? "top-0 md:top-[36px]" : "top-0"        }`}
-      >
-        <Container>
-          <div className="flex items-center justify-between py-3">
-
-            {/* LOGO */}
-            <NavLink to="/" className="flex items-center gap-2.5 group">
-              <img src={logo} alt="Alliance BTS" className="h-14 w-auto" />
-              <div className="flex flex-col leading-tight">
-                <span
-                  className="text-base font-bold text-[#0D2550] tracking-wide transition-colors group-hover:text-[#00B4F0]"
-                  style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 700 }}
-                >
-                  Alliance
-                </span>
-                <span
-                  className="text-[10px] text-[#0D2550]/60 tracking-[0.1em] uppercase"
-                  style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 500 }}
-                >
-                  Behavioral Therapy
-                </span>
-              </div>
-            </NavLink>
-
-            {/* CENTER MENU */}
-            <div
-              className="hidden md:flex gap-8 text-sm absolute left-1/2 -translate-x-1/2"
-              style={{ fontFamily: "'Rajdhani', sans-serif" }}
-            >
-              {navLinks.map(({ to, label }) => (
-                <NavLink key={to} to={to} className="relative group">
-                  {({ isActive }) => (
-                    <>
-                      <span
-                        className={`transition-colors duration-300 tracking-wide ${
-                          isActive
-                            ? "text-[#0D2550] font-semibold"
-                            : "text-[#0D2550]/80 font-medium group-hover:text-[#00B4F0]"
-                        }`}
-                        style={{ fontWeight: isActive ? 700 : 600 }}
-                      >
-                        {label}
-                      </span>
-
-                      {/* UNDERLINE */}
-                      <span
-                        className={`absolute -bottom-1 left-0 h-[2px] bg-[#00B4F0] rounded-full transition-all duration-300 ${
-                          isActive ? "w-full" : "w-0 group-hover:w-full"
-                        }`}
-                      />
-                    </>
-                  )}
-                </NavLink>
-              ))}
-            </div>
-
-            {/* RIGHT BUTTONS */}
-            <div
-              className="hidden md:flex items-center gap-3"
-              style={{ fontFamily: "'Rajdhani', sans-serif" }}
-            >
-              {/* Secondary: Call Now */}
-              <a
-                href="tel:+13019809679"
-                className="
-                  px-5 py-1.5 rounded-full text-sm tracking-wide
-                  border border-[#0D2550] text-[#0D2550] font-semibold
-                  hover:bg-[#0D2550] hover:text-white
-                  transition-all duration-300
-                "
-                style={{ fontWeight: 600 }}
-              >
-                Call Now
-              </a>
-
-              {/* Primary: Find a therapist */}
-              <NavLink
-                to="/contact-us"
-                className="
-                  px-5 py-1.5 rounded-full text-sm tracking-wide
-                  bg-[#0D2550] text-white font-semibold
-                  hover:bg-[#123068]
-                  transition-all duration-300
-                "
-                style={{ fontWeight: 600 }}
-              >
-                Find a Therapist
-              </NavLink>
-            </div>
-
-            {/* MOBILE TOGGLE */}
-            <button
-              className="md:hidden text-[#0D2550] hover:text-[#00B4F0] transition-colors duration-300 p-1"
-              onClick={() => setOpen(!open)}
-              aria-label="Toggle menu"
-            >
-              {open ? <CloseIcon /> : <MenuIcon />}
-            </button>
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-3 no-underline">
+          <img src={logo} alt="BrightPath Autism" className="h-10 w-auto" />
+          <div className="leading-tight">
+            <p style={{ fontSize: "17px", fontWeight: 700, color: "#1A202C", margin: 0 }}>BrightPath</p>
+            <p style={{ fontSize: "12px", fontWeight: 500, color: "#5DBB2E", margin: 0, letterSpacing: "0.3px" }}>Autism Therapy</p>
           </div>
+        </Link>
 
-          {/* MOBILE MENU */}
-          {open && (
-            <div
-              className="md:hidden flex flex-col gap-1 pb-4 pt-2 border-t border-[#0D2550]/10"
-              style={{ fontFamily: "'Rajdhani', sans-serif" }}
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center gap-1">
+          {navLinks.map((link, i) => {
+            const isActive = location.pathname === link.to;
+            return (
+              <Link
+                key={i}
+                to={link.to}
+                style={{
+                  fontSize: "14px",
+                  fontWeight: isActive ? 600 : 500,
+                  color: isActive ? "#2C5F9E" : "#4A5568",
+                  background: isActive ? "#E8F0FA" : "transparent",
+                  padding: "8px 14px",
+                  borderRadius: "8px",
+                  textDecoration: "none",
+                  transition: "background .15s, color .15s",
+                }}
+                onMouseEnter={e => { if (!isActive) { e.target.style.background = "#E8F0FA"; e.target.style.color = "#2C5F9E"; }}}
+                onMouseLeave={e => { if (!isActive) { e.target.style.background = "transparent"; e.target.style.color = "#4A5568"; }}}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Desktop Actions */}
+     <div className="hidden md:flex items-center gap-3">
+  <a
+    href="tel:+14439003895"
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: "7px",
+      fontSize: "13px",
+      fontWeight: 500,
+      color: "#2C5F9E",
+      border: "1.5px solid #2C5F9E",
+      padding: "8px 16px",
+      borderRadius: "100px",
+      textDecoration: "none",
+      transition: "background .15s, color .15s",
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.background = "#2C5F9E";
+      e.currentTarget.style.color = "#fff";
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.background = "#fff";
+      e.currentTarget.style.color = "#2C5F9E";
+    }}
+  >
+   1 (443) 900-3895
+  </a>
+          <Link
+            to="/contact-us"
+            style={{
+              fontSize: "13px", fontWeight: 600, color: "#fff",
+              background: "#5DBB2E", padding: "9px 20px",
+              borderRadius: "100px", textDecoration: "none",
+              transition: "background .15s",
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = "#3D8F18"}
+            onMouseLeave={e => e.currentTarget.style.background = "#5DBB2E"}
+          >
+            Get Started →
+          </Link>
+        </div>
+
+        {/* Hamburger */}
+        <button
+          className="md:hidden flex flex-col gap-1 p-2 rounded-lg border-none bg-transparent cursor-pointer"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <span style={{ display: "block", width: "20px", height: "2px", background: "#2C5F9E", borderRadius: "2px" }} />
+          <span style={{ display: "block", width: "14px", height: "2px", background: "#2C5F9E", borderRadius: "2px" }} />
+          <span style={{ display: "block", width: "20px", height: "2px", background: "#2C5F9E", borderRadius: "2px" }} />
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div className="md:hidden border-t border-slate-200" style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "2px" }}>
+          {navLinks.map((link, i) => {
+            const isActive = location.pathname === link.to;
+            return (
+              <Link
+                key={i}
+                to={link.to}
+                onClick={() => setIsOpen(false)}
+                style={{
+                  fontSize: "14px", fontWeight: isActive ? 600 : 500,
+                  color: isActive ? "#2C5F9E" : "#4A5568",
+                  background: isActive ? "#E8F0FA" : "transparent",
+                  padding: "10px 12px", borderRadius: "8px", textDecoration: "none",
+                }}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+          <div style={{ marginTop: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>
+            
+            <a
+  href="tel:+14439003895"
+  style={{
+    fontSize: "13px",
+    fontWeight: 500,
+    color: "#2C5F9E",
+    border: "1.5px solid #2C5F9E",
+    padding: "10px 16px",
+    borderRadius: "100px",
+    textAlign: "center",
+    textDecoration: "none",
+  }}
+>
+  Call: 1 (443) 900-3895
+</a>
+            <Link
+              to="/contact-us"
+              onClick={() => setIsOpen(false)}
+              style={{
+                fontSize: "13px", fontWeight: 600, color: "#fff",
+                background: "#5DBB2E", padding: "10px 16px",
+                borderRadius: "100px", textAlign: "center", textDecoration: "none",
+              }}
             >
-              {navLinks.map(({ to, label }) => (
-                <NavLink
-                  key={to}
-                  to={to}
-                  onClick={() => setOpen(false)}
-                  className={({ isActive }) =>
-                    `text-sm px-4 py-2.5 rounded-lg tracking-wide transition-colors duration-300 ${
-                      isActive
-                        ? "text-[#0D2550] bg-[#0D2550]/10 font-bold"
-                        : "text-[#0D2550]/80 font-semibold hover:text-[#00B4F0] hover:bg-[#0D2550]/5"
-                    }`
-                  }
-                  style={{ fontWeight: undefined }}
-                >
-                  {label}
-                </NavLink>
-              ))}
-
-              <div className="mt-3 pt-3 border-t border-[#0D2550]/10 flex flex-col gap-2">
-                <a
-                  href="tel:+13019809679"
-                  className="
-                    text-sm text-center py-2 rounded-full tracking-wide font-semibold
-                    border border-[#0D2550] text-[#0D2550]
-                    hover:bg-[#0D2550] hover:text-white
-                    transition-all duration-300
-                  "
-                >
-                  Call Now
-                </a>
-
-                <NavLink
-                  to="/contact-us"
-                  onClick={() => setOpen(false)}
-                  className="
-                    text-sm text-center py-2 rounded-full tracking-wide font-semibold
-                    bg-[#0D2550] text-white
-                    hover:bg-[#123068]
-                    transition-all duration-300
-                  "
-                >
-                  Find a Therapist
-                </NavLink>
-              </div>
-            </div>
-          )}
-        </Container>
-      </nav>
-    </>
+              Get Started
+            </Link>
+          </div>
+        </div>
+      )}
+    </header>
   );
 }
+
+export default Navbar;

@@ -2,86 +2,82 @@ import { motion } from "framer-motion";
 import Container from "../components/common/Container";
 
 const PINK = "#E8194B";
-const ORANGE = "#F06A00";
 const GREEN = "#5aaa00";
-const VIOLET = "#8B5CF6";
 
-const values = [
+const items = [
   {
     number: "01",
-    title: "Compassion",
-    desc: "We treat every child with empathy, patience, and genuine care to create a supportive environment.",
+    title: "Certified ABA Therapists",
+    desc: "Our team includes trained and certified professionals dedicated to delivering high-quality therapy.",
     accent: PINK,
     accentBg: "#fff0f3",
     icon: (
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <path d="M11 4C8 4 5.5 6 4 8.5c0 0 2 4 7 4s7-4 7-4C16.5 6 14 4 11 4Z" stroke={PINK} strokeWidth="1.6" strokeLinejoin="round" />
-        <path d="M11 4V2M7.5 5L6 3.5M14.5 5L16 3.5M4 8.5H2M20 8.5h-2" stroke={PINK} strokeWidth="1.6" strokeLinecap="round" />
-        <circle cx="11" cy="9" r="2" stroke={PINK} strokeWidth="1.6" />
+        <circle cx="11" cy="7" r="4" stroke={PINK} strokeWidth="1.6" />
+        <path d="M3 19c0-4 3.6-7 8-7s8 3 8 7" stroke={PINK} strokeWidth="1.6" strokeLinecap="round" />
+        <path d="M15 10l1.5 1.5L19 9" stroke={PINK} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },
   {
     number: "02",
-    title: "Individualized Care",
-    desc: "Every child is unique, and we tailor our therapy plans to fit their specific needs and strengths.",
-    accent: ORANGE,
+    title: "Personalized Care Plans",
+    desc: "Every child receives a customized therapy plan tailored to their unique strengths and needs.",
+    accent: "#F06A00",
     accentBg: "#fff5ee",
     icon: (
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <circle cx="11" cy="11" r="7" stroke={ORANGE} strokeWidth="1.6" />
-        <circle cx="11" cy="11" r="2.5" stroke={ORANGE} strokeWidth="1.6" />
-        <path d="M11 4V2M11 20v-2M4 11H2M20 11h-2" stroke={ORANGE} strokeWidth="1.6" strokeLinecap="round" />
-        <path d="M6.3 6.3l-1.4-1.4M17.1 17.1l-1.4-1.4M6.3 15.7l-1.4 1.4M17.1 4.9l-1.4 1.4" stroke={ORANGE} strokeWidth="1.6" strokeLinecap="round" />
+        <rect x="4" y="3" width="14" height="16" rx="2" stroke="#F06A00" strokeWidth="1.6" />
+        <path d="M8 8h6M8 12h6M8 16h4" stroke="#F06A00" strokeWidth="1.6" strokeLinecap="round" />
+        <circle cx="15" cy="15" r="3.5" fill="#fff5ee" stroke="#F06A00" strokeWidth="1.4" />
+        <path d="M14 15l.8.8L16.2 14" stroke="#F06A00" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },
   {
     number: "03",
-    title: "Integrity",
-    desc: "We are committed to transparency, honesty, and ethical practices in everything we do.",
+    title: "Family-Centered Approach",
+    desc: "We actively involve parents and caregivers to ensure consistent progress at home and beyond.",
     accent: GREEN,
     accentBg: "#f2faeb",
     icon: (
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <path d="M11 3L4 7v5c0 4.4 3 8.5 7 9.5 4-1 7-5.1 7-9.5V7L11 3Z" stroke={GREEN} strokeWidth="1.6" strokeLinejoin="round" />
-        <path d="M8 11l2 2 4-4" stroke={GREEN} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="8" cy="7" r="3" stroke={GREEN} strokeWidth="1.6" />
+        <circle cx="15" cy="8.5" r="2.5" stroke={GREEN} strokeWidth="1.6" />
+        <path d="M2 18c0-3 2.7-5 6-5s6 2 6 5" stroke={GREEN} strokeWidth="1.6" strokeLinecap="round" />
+        <path d="M16 14c2 0 4 1.2 4 4" stroke={GREEN} strokeWidth="1.6" strokeLinecap="round" />
       </svg>
     ),
   },
   {
     number: "04",
-    title: "Collaboration",
-    desc: "We work closely with families, caregivers, and educators to ensure consistent progress.",
-    accent: VIOLET,
+    title: "Safe & Supportive Environment",
+    desc: "We create a positive, structured environment where children feel comfortable to learn and grow.",
+    accent: "#8B5CF6",
     accentBg: "#f3f0ff",
     icon: (
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <circle cx="8" cy="7" r="3" stroke={VIOLET} strokeWidth="1.6" />
-        <circle cx="15" cy="8.5" r="2.5" stroke={VIOLET} strokeWidth="1.6" />
-        <path d="M2 18c0-3 2.7-5 6-5s6 2 6 5" stroke={VIOLET} strokeWidth="1.6" strokeLinecap="round" />
-        <path d="M16 14c2 0 4 1.2 4 4" stroke={VIOLET} strokeWidth="1.6" strokeLinecap="round" />
+        <path d="M11 3L4 6v5c0 4.4 3 8.5 7 9.5 4-1 7-5.1 7-9.5V6L11 3z" stroke="#8B5CF6" strokeWidth="1.6" strokeLinejoin="round" />
+        <path d="M8 11l2 2 4-4" stroke="#8B5CF6" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },
 ];
 
-const easeOut = [0.16, 1, 0.3, 1];
-
 const cardVariants = {
-  hidden: { opacity: 0, y: 44 },
+  hidden: { opacity: 0, y: 40 },
   visible: (i) => ({
     opacity: 1,
     y: 0,
     transition: {
-      delay: i * 0.12,
-      duration: 0.6,
-      ease: easeOut,
+      delay: i * 0.13,
+      duration: 0.55,
+      ease: [0.16, 1, 0.3, 1],
     },
   }),
 };
 
-function ValueCard({ item, i }) {
+function TrustCard({ item, i }) {
   return (
     <motion.div
       custom={i}
@@ -89,10 +85,7 @@ function ValueCard({ item, i }) {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-60px" }}
-      whileHover={{
-        y: -8,
-        transition: { duration: 0.28, ease: "easeOut" },
-      }}
+      whileHover={{ y: -6, transition: { duration: 0.25, ease: "easeOut" } }}
       style={{
         background: "#ffffff",
         borderRadius: 20,
@@ -100,6 +93,7 @@ function ValueCard({ item, i }) {
         padding: "28px 24px 26px",
         display: "flex",
         flexDirection: "column",
+        gap: 0,
         cursor: "default",
         position: "relative",
         overflow: "hidden",
@@ -121,22 +115,11 @@ function ValueCard({ item, i }) {
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}
-        transition={{
-          delay: i * 0.12 + 0.3,
-          duration: 0.5,
-          ease: "easeOut",
-        }}
+        transition={{ delay: i * 0.13 + 0.3, duration: 0.45, ease: "easeOut" }}
       />
 
-      {/* Number + Icon */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          marginBottom: 20,
-        }}
-      >
+      {/* Number + icon row */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
         <span
           style={{
             fontSize: 12,
@@ -171,8 +154,8 @@ function ValueCard({ item, i }) {
           color: "#111111",
           margin: "0 0 10px",
           lineHeight: 1.25,
-          letterSpacing: "-0.02em",
           fontFamily: "'Inter', sans-serif",
+          letterSpacing: "-0.02em",
         }}
       >
         {item.title}
@@ -190,54 +173,26 @@ function ValueCard({ item, i }) {
       >
         {item.desc}
       </p>
-
-      {/* Bottom accent line */}
-      <motion.div
-        style={{
-          marginTop: 22,
-          height: 3,
-          borderRadius: 4,
-          maxWidth: 44,
-          background: item.accent,
-          transformOrigin: "left",
-        }}
-        initial={{ scaleX: 0 }}
-        whileInView={{ scaleX: 1 }}
-        viewport={{ once: true }}
-        transition={{
-          delay: i * 0.12 + 0.5,
-          duration: 0.45,
-          ease: "easeOut",
-        }}
-      />
     </motion.div>
   );
 }
 
-function CoreValues() {
+function Trust() {
   return (
     <section
-      className="relative overflow-hidden"
+      className="py-16 md:py-28"
       style={{ background: "#FAFAF8", fontFamily: "'Inter', sans-serif" }}
     >
-      {/* Decorative blurs */}
-      <div
-        className="absolute top-0 right-[15%] w-72 h-72 rounded-full opacity-[0.06] blur-3xl pointer-events-none"
-        style={{ background: VIOLET }}
-      />
-      <div
-        className="absolute bottom-0 left-[10%] w-64 h-64 rounded-full opacity-[0.07] blur-3xl pointer-events-none"
-        style={{ background: ORANGE }}
-      />
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');`}</style>
+      <Container>
 
-      <Container className="relative py-16 md:py-28">
         {/* Heading */}
         <motion.div
           className="text-center max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: easeOut }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           <motion.span
             style={{
@@ -255,7 +210,7 @@ function CoreValues() {
             viewport={{ once: true }}
             transition={{ delay: 0.1, duration: 0.5 }}
           >
-            What drives us
+            Why choose us
           </motion.span>
 
           <h2
@@ -265,12 +220,12 @@ function CoreValues() {
               color: "#0f0f0f",
               letterSpacing: "-0.035em",
               lineHeight: 1.1,
-              margin: "0 0 22px",
+              margin: "0 0 26px",
               fontFamily: "'Inter', sans-serif",
             }}
           >
-            Our Core{" "}
-            <span style={{ color: PINK }}>Values</span>
+            Why families trust{" "}
+            <span style={{ color: PINK }}>BrightPath Autism</span>
           </h2>
 
           <p
@@ -283,27 +238,27 @@ function CoreValues() {
               fontFamily: "'Inter', sans-serif",
             }}
           >
-            Our work is guided by strong values that shape every
-            interaction, every decision, and every success story.
+            Quality care, personalized support, and meaningful progress for every child.
           </p>
         </motion.div>
 
-        {/* Cards */}
+        {/* Cards grid */}
         <div
           style={{
-            marginTop: 56,
+            marginTop: 52,
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
             gap: 20,
           }}
         >
-          {values.map((item, i) => (
-            <ValueCard key={i} item={item} i={i} />
+          {items.map((item, i) => (
+            <TrustCard key={i} item={item} i={i} />
           ))}
         </div>
+
       </Container>
     </section>
   );
 }
 
-export default CoreValues;
+export default Trust;

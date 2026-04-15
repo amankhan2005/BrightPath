@@ -6,16 +6,16 @@ import { motion, AnimatePresence } from "framer-motion";
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 */
 
-// ── Design tokens ─────────────────────────────────────────────────────────────
+// ── Design tokens (Aligned with BrightPath Premium Theme) ─────────────────
 const T = {
-  bg:      "#F5F9FF",
-  surface: "#E0EEF8",
-  primary: "#185FA5",
-  accent:  "#00B4F0",
-  dark:    "#0D2550",
-  text:    "#1A1A2E",
-  muted:   "#5A7A9A",
-  border:  "#C8DCF0",
+  bg:      "#FAFAF8",
+  surface: "#fff0f3", // Light pink tint
+  primary: "#E8194B", // Hot Pink
+  accent:  "#ff6b8a", // Soft Pink
+  dark:    "#111111", // Near Black
+  text:    "#374151", // Gray 700
+  muted:   "#9ca3af", // Gray 400
+  border:  "#f0eff0", // Soft Border
   white:   "#FFFFFF",
 };
 
@@ -41,7 +41,7 @@ if (typeof document !== "undefined") {
 }
 
 // ── SVG Icons ─────────────────────────────────────────────────────────────────
-const ChatIcon = ({ size = 16, color = T.accent }) => (
+const ChatIcon = ({ size = 16, color = T.primary }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
     stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
     aria-hidden="true">
@@ -83,46 +83,46 @@ const ArrowIcon = ({ size = 11, color = T.white }) => (
   </svg>
 );
 
-// ── Reply content ─────────────────────────────────────────────────────────────
+// ── Reply content (BrightPath Autism Branded) ──────────────────────────────
 const REPLIES = {
   services: {
-    text: `We provide specialized behavioral therapy services designed to support children and families, including:\n\n• Autism Therapy\n• Behavioral Therapy\n• Parent Training\n• Social Skills Development\n\nEach program is tailored to meet individual needs and promote long-term progress.`,
-    showContactBtn: false,
+    text: `At BrightPath Autism, we provide compassionate ABA therapy services designed to support your child's growth and development.\n\nOur services include:\n• Communication & Language Development\n• Social Interaction Skills\n• Behavior Management\n• Play & Learning Skills\n\nEach therapy plan is personalized based on your child’s unique needs, helping them build confidence, communication, and independence.`,
+    showContactBtn: true,
   },
   about: {
-    text: `At Alliance Behavioral Therapy Solutions, we are dedicated to helping individuals and families achieve meaningful progress through evidence-based behavioral therapy.\n\nOur Mission\nTo provide compassionate, individualized care that empowers children and families to reach their full potential.\n\nOur Vision\nTo be a trusted leader in behavioral healthcare, creating lasting positive change in every life we touch.`,
+    text: `BrightPath Autism LLC is a dedicated provider of Applied Behavior Analysis (ABA) therapy services in the United States.\n\nWe focus on helping children with autism build communication, social, and life skills through personalized and compassionate care.\n\nOur team works closely with families to create individualized therapy plans and provide ongoing support for long-term success.`,
     showContactBtn: false,
   },
   call: {
-    text: `You can connect with our team instantly by using the "Schedule a free call" button below. Our care coordinator will assist you right away.`,
+    text: `You can speak directly with our care team for guidance and support.\n\nPhone: (443) 900-3895\nWe are here to help you get started with the right care for your child.`,
     showContactBtn: false,
   },
   book: {
-    text: `Getting started is simple. You can schedule a free consultation call using the button below, or visit our contact page to request an appointment.\n\nContact page: /contact-us`,
+    text: `Getting started is simple. You can request a consultation and our team will guide you through the next steps.\n\nWe will understand your child's needs and create a personalized therapy plan for the best possible outcomes.`,
     showContactBtn: true,
   },
   contact: {
-    text: `You can reach our team through our contact page:\n\n/contact-us\n\nYou can also schedule a call directly using the button below.`,
+    text: `You can reach BrightPath Autism through the following:\n\nPhone: (443) 900-3895\nEmail: arutere@bpautism.com\nAddress: Silver Spring, MD\n\nOur team typically responds within one business day.`,
     showContactBtn: true,
   },
   confidential: {
-    text: `All sessions are fully confidential and HIPAA-compliant. Your privacy is our highest priority — always.`,
+    text: `Your privacy is extremely important to us.\n\nAll services at BrightPath Autism are HIPAA-conscious and your information is always kept safe and confidential.`,
     showContactBtn: false,
   },
   insurance: {
-    text: `We work with most major insurance plans. Reach out and we will verify your coverage before your first appointment at no cost to you.`,
+    text: `We work with many insurance providers and can help verify your coverage before starting services.\n\nOur goal is to make quality care accessible and stress-free for families.`,
     showContactBtn: true,
   },
   cost: {
-    text: `Costs vary depending on the service and your insurance coverage. We offer transparent pricing and will provide a full breakdown before you commit to anything.`,
+    text: `The cost of therapy depends on your child’s needs and insurance coverage.\n\nWe provide clear guidance and support so you understand everything before starting.`,
     showContactBtn: true,
   },
   location: {
-    text: `We offer both in-person and telehealth sessions, so you can receive care from wherever you are most comfortable.`,
+    text: `We provide services in the United States, including in-person and telehealth sessions.\n\nThis allows your child to receive care in a comfortable and supportive environment.`,
     showContactBtn: false,
   },
   default: {
-    text: `I am here to help you with our services, appointments, or any questions about your care. What would you like to know?`,
+    text: `I'm here to help you with our services, getting started, or any questions about your child’s care at BrightPath Autism.\n\nHow can I assist you today?`,
     showContactBtn: false,
   },
 };
@@ -146,7 +146,7 @@ function getBotReply(msg) {
 const QUICK_CHIPS = [
   "What services do you offer?",
   "How do I get started?",
-  "Is this confidential?",
+  "Is my child's info safe?",
 ];
 
 // ── Framer Motion variants ────────────────────────────────────────────────────
@@ -209,16 +209,16 @@ const TypingIndicator = ({ isMobile }) => (
 
 // ── In-bubble Contact button ──────────────────────────────────────────────────
 const ContactButton = () => (
-  <motion.button
-    whileHover={{ scale: 1.03, boxShadow: "0 0.375rem 1.125rem rgba(13,37,80,0.30)" }}
+  <motion.a
+    href="/contact-us"
+    whileHover={{ scale: 1.03, boxShadow: "0 0.375rem 1.125rem rgba(232, 25, 75, 0.25)" }}
     whileTap={{ scale: 0.97 }}
-    onClick={() => { window.location.href = "/contact-us"; }}
     style={makeStyles(false).contactBtn}
     aria-label="Visit contact page"
   >
     Contact Us
     <ArrowIcon size={10} color={T.white} />
-  </motion.button>
+  </motion.a>
 );
 
 // ── Message bubble ────────────────────────────────────────────────────────────
@@ -272,7 +272,7 @@ export default function FloatingAIChat() {
   const [messages, setMessages] = useState([
     {
       sender: "bot",
-      text: "Hello. I am the Alliance Care Assistant. I am here to help you understand our services, book a consultation, or answer any questions about your care.",
+      text: "Hi there! I'm the BrightPath Care Assistant. I'm here to help you learn about our ABA therapy services, answer questions, or help you get started.",
       showContactBtn: false,
     },
   ]);
@@ -314,7 +314,7 @@ export default function FloatingAIChat() {
         {open && (
           <motion.div
             role="dialog"
-            aria-label="Alliance Care Assistant chat"
+            aria-label="BrightPath Care Assistant chat"
             variants={cardVariants}
             initial="hidden"
             animate="visible"
@@ -324,10 +324,10 @@ export default function FloatingAIChat() {
             {/* Header */}
             <div style={s.header}>
               <div style={s.headerAvatar}>
-                <ChatIcon size={16} color={T.accent} />
+                <ChatIcon size={16} color={T.white} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={s.headerName}>Alliance Care Assistant</div>
+                <div style={s.headerName}>BrightPath Care Assistant</div>
                 <div style={s.headerStatus}>
                   <motion.div
                     style={s.statusDot}
@@ -409,19 +409,7 @@ export default function FloatingAIChat() {
               </motion.button>
             </div>
 
-            {/* CTA */}
-            <div style={s.ctaWrap}>
-              <motion.button
-                whileHover={{ scale: 1.02, boxShadow: "0 0.625rem 1.625rem rgba(13,37,80,0.42)" }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => { window.location.href = "tel:+13019809679"; }}
-                style={s.ctaBtn}
-                aria-label="Schedule a free call"
-              >
-                <PhoneIcon size={14} />
-                Schedule a free call
-              </motion.button>
-            </div>
+      
           </motion.div>
         )}
       </AnimatePresence>
@@ -435,7 +423,7 @@ export default function FloatingAIChat() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            whileHover={{ scale: 1.1, boxShadow: "0 0.625rem 1.875rem rgba(13,37,80,0.45)" }}
+            whileHover={{ scale: 1.1, boxShadow: "0 0.625rem 1.875rem rgba(232, 25, 75, 0.4)" }}
             whileTap={{ scale: 0.92 }}
             style={s.fab}
             aria-label="Open chat assistant"
@@ -456,8 +444,7 @@ function makeStyles(isMobile) {
     card: {
       position: "fixed",
       right: isMobile ? "0.75rem" : "1.5rem",
-      // Changed from 50% to 45% to shift the widget a bit higher on desktop
-      top: isMobile ? "auto" : "45%", 
+      top: isMobile ? "auto" : "20%", 
       bottom: isMobile ? "5.5rem" : "auto",
       transform: isMobile ? "none" : "translateY(-50%)",
       width: "min(92vw, 22rem)",
@@ -466,11 +453,11 @@ function makeStyles(isMobile) {
       background: T.white,
       borderRadius: isMobile ? "1.125rem" : "1.375rem",
       border: `1px solid ${T.border}`,
-      boxShadow: "0 0.75rem 2.5rem rgba(24,95,165,0.13), 0 0.125rem 0.625rem rgba(24,95,165,0.07)",
+      boxShadow: `0 0.75rem 2.5rem rgba(232, 25, 75, 0.08), 0 0.125rem 0.625rem rgba(0,0,0,0.04)`,
       display: "flex",
       flexDirection: "column",
       overflow: "hidden",
-      fontFamily: "'Rajdhani', sans-serif",
+      fontFamily: "'Inter', sans-serif",
     },
 
     header: {
@@ -486,8 +473,7 @@ function makeStyles(isMobile) {
       width: "2.25rem",
       height: "2.25rem",
       borderRadius: "50%",
-      background: "#1e3a6e",
-      border: "1.5px solid rgba(0,180,240,0.25)",
+      background: T.primary,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -552,13 +538,13 @@ function makeStyles(isMobile) {
       fontWeight: 600,
       color: T.primary,
       background: T.surface,
-      border: `1px solid ${T.border}`,
+      border: `1px solid rgba(232, 25, 75, 0.15)`,
       borderRadius: "999px",
       padding: isMobile ? "0.4375rem 0.625rem" : "0.5rem 0.75rem",
       cursor: "pointer",
       outline: "none",
       whiteSpace: "nowrap",
-      fontFamily: "'DM Sans', system-ui, sans-serif",
+      fontFamily: "'Inter', sans-serif",
       transition: "background 0.15s",
       WebkitTapHighlightColor: "transparent",
     },
@@ -590,7 +576,7 @@ function makeStyles(isMobile) {
       height: "1.625rem",
       borderRadius: "50%",
       background: T.surface,
-      border: `1px solid ${T.border}`,
+      border: `1px solid rgba(232, 25, 75, 0.15)`,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -602,14 +588,14 @@ function makeStyles(isMobile) {
       bot: {
         padding: isMobile ? "0.625rem 0.75rem" : "0.75rem 0.875rem",
         borderRadius: "1rem 1rem 1rem 0.25rem",
-        background: T.surface,
+        background: "#f9fafb", // Tailwind gray-50 for soft contrast
         color: T.text,
         fontSize: isMobile ? "0.875rem" : "0.9375rem",
         lineHeight: 1.6,
         whiteSpace: "pre-wrap",
         overflowWrap: "break-word",
         wordBreak: "break-word",
-        border: "1px solid rgba(200,220,240,0.6)",
+        border: `1px solid ${T.border}`,
       },
       user: {
         padding: isMobile ? "0.625rem 0.75rem" : "0.75rem 0.875rem",
@@ -631,16 +617,17 @@ function makeStyles(isMobile) {
       gap: "0.3125rem",
       padding: "0.5rem 0.875rem",
       borderRadius: "999px",
-      background: T.dark,
+      background: T.primary,
       color: T.white,
       fontSize: "0.8125rem",
       fontWeight: 700,
-      fontFamily: "'DM Sans', system-ui, sans-serif",
+      fontFamily: "'Inter', sans-serif",
       border: "none",
       cursor: "pointer",
       letterSpacing: "0.02em",
-      boxShadow: "0 0.25rem 0.75rem rgba(13,37,80,0.22)",
+      boxShadow: "0 0.25rem 0.75rem rgba(232, 25, 75, 0.25)",
       outline: "none",
+      textDecoration: "none",
       WebkitTapHighlightColor: "transparent",
     },
 
@@ -659,7 +646,7 @@ function makeStyles(isMobile) {
       padding: "0 1rem",
       borderRadius: "999px",
       border: `1.5px solid ${T.border}`,
-      fontFamily: "'DM Sans', system-ui, sans-serif",
+      fontFamily: "'Inter', sans-serif",
       fontSize: "1rem", // 16px to prevent iOS zoom
       color: T.text,
       background: T.bg,
@@ -672,7 +659,7 @@ function makeStyles(isMobile) {
       width: touchTarget,
       height: touchTarget,
       borderRadius: "50%",
-      background: T.dark,
+      background: T.primary,
       border: "none",
       cursor: "pointer",
       display: "flex",
@@ -680,7 +667,7 @@ function makeStyles(isMobile) {
       justifyContent: "center",
       flexShrink: 0,
       outline: "none",
-      boxShadow: "0 0.1875rem 0.625rem rgba(13,37,80,0.22)",
+      boxShadow: "0 0.1875rem 0.625rem rgba(232, 25, 75, 0.25)",
       WebkitTapHighlightColor: "transparent",
     },
 
@@ -695,9 +682,9 @@ function makeStyles(isMobile) {
       padding: "0.875rem 0",
       borderRadius: "999px",
       border: "none",
-      background: "linear-gradient(135deg, #0D2550 0%, #185FA5 100%)",
+      background: T.primary,
       color: T.white,
-      fontFamily: "'DM Sans', system-ui, sans-serif",
+      fontFamily: "'Inter', sans-serif",
       fontSize: "0.875rem",
       fontWeight: 700,
       letterSpacing: "0.025em",
@@ -706,8 +693,9 @@ function makeStyles(isMobile) {
       alignItems: "center",
       justifyContent: "center",
       gap: "0.5rem",
-      boxShadow: "0 0.3125rem 1.125rem rgba(13,37,80,0.30)",
+      boxShadow: "0 0.3125rem 1.125rem rgba(232, 25, 75, 0.3)",
       outline: "none",
+      textDecoration: "none",
       WebkitTapHighlightColor: "transparent",
     },
 
@@ -719,13 +707,13 @@ function makeStyles(isMobile) {
       width: "3.5rem",
       height: "3.5rem",
       borderRadius: "50%",
-      background: T.dark,
+      background: T.primary,
       border: "none",
       cursor: "pointer",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      boxShadow: "0 0.375rem 1.5rem rgba(13,37,80,0.38)",
+      boxShadow: "0 0.375rem 1.5rem rgba(232, 25, 75, 0.4)",
       outline: "none",
       WebkitTapHighlightColor: "transparent",
     },

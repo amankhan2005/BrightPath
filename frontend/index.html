@@ -1,4 +1,4 @@
-<!doctype html>
+ <!doctype html>
 <html lang="en">
   <head>
     <!-- BASIC -->
@@ -6,56 +6,117 @@
     <link rel="icon" type="image/png" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- TITLE -->
+    <!-- TITLE (SEO OPTIMIZED) -->
     <title>
-      Autism & Behavioral Therapy in Clarksville, MD | Alliance Behavioral Therapy Solutions
+      ABA Therapy for Children | BrightPath Autism LLC | USA Autism Services
     </title>
 
-    <!-- SEO -->
+    <!-- PRIMARY SEO -->
     <meta
       name="description"
-      content="Alliance Behavioral Therapy Solutions provides autism therapy, behavioral therapy, parent training, and social skills development in Clarksville, Maryland. Personalized care for children and families."
+      content="BrightPath Autism LLC provides expert ABA therapy for children with autism in the USA. Improve communication, behavior, and social skills with personalized therapy programs."
     />
 
     <meta
       name="keywords"
-      content="autism therapy Maryland, behavioral therapy Clarksville MD, ABA therapy, child therapy services, parent training, social skills therapy"
+      content="ABA therapy USA, autism therapy for children, behavioral therapy, autism services Maryland, social skills therapy, communication therapy autism"
     />
 
-    <meta name="author" content="Alliance Behavioral Therapy Solutions, LLC" />
+    <meta name="author" content="BrightPath Autism LLC" />
 
-    <!-- OPEN GRAPH -->
-    <meta property="og:title" content="Alliance Behavioral Therapy Solutions" />
+    <!-- CANONICAL -->
+    <link rel="canonical" href="https://bpautism.com" />
+
+    <!-- OPEN GRAPH (FACEBOOK / LINKEDIN) -->
+    <meta property="og:title" content="BrightPath Autism LLC | ABA Therapy Services" />
     <meta
       property="og:description"
-      content="Expert autism and behavioral therapy services in Maryland."
+      content="Personalized ABA therapy for children with autism. Helping families build a brighter future."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.alliancebehavioraltherapysolutions.com" />
+    <meta property="og:url" content="https://bpautism.com" />
     <meta property="og:image" content="/preview.jpg" />
 
-    <!-- THEME -->
-    <meta name="theme-color" content="#0D2550" />
+    <!-- TWITTER -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="BrightPath Autism LLC" />
+    <meta
+      name="twitter:description"
+      content="Expert ABA therapy services for children with autism."
+    />
+    <meta name="twitter:image" content="/preview.jpg" />
 
-    <!-- FONTS -->
+    <!-- THEME COLOR (Matched to Brand Pink) -->
+    <meta name="theme-color" content="#E8194B" />
+
+    <!-- FONTS (OPTIMIZED - Added 800 & 900 for Premium Headings) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <link
-      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
 
     <!-- PERFORMANCE -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+
+    <!-- ANTI-FOUC (Prevents flash of unstyled text before React hydrates) -->
+    <style>
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
+
+    <!-- STRUCTURED DATA (ENHANCED LOCAL SEO 🔥) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "MedicalBusiness",
+        "name": "BrightPath Autism LLC",
+        "image": "https://bpautism.com/preview.jpg",
+        "url": "https://bpautism.com",
+        "telephone": "+1-443-900-3895",
+        "email": "arutere@bpautism.com",
+        "description": "BrightPath Autism LLC provides expert ABA therapy for children with autism in the USA. Improve communication, behavior, and social skills with personalized therapy programs.",
+        "priceRange": "$$",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "3501 Sheffield Manor Terrace",
+          "addressLocality": "Silver Spring",
+          "addressRegion": "MD",
+          "postalCode": "20904",
+          "addressCountry": "US"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 39.0437,
+          "longitude": -76.9765
+        },
+        "areaServed": {
+          "@type": "Country",
+          "name": "United States"
+        },
+        "serviceType": [
+          "ABA Therapy",
+          "Autism Therapy",
+          "Behavior Management",
+          "Communication Therapy",
+          "Social Skills Training"
+        ],
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          "opens": "08:00",
+          "closes": "18:00"
+        }
+      }
+    </script>
   </head>
 
-  <body>
+  <body class="bg-white text-neutral-900">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

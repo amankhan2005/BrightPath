@@ -1,873 +1,324 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Container from "../components/common/Container";
 import toast from "react-hot-toast";
-import { MapPin, Mail, Phone, FileText, Clock, RefreshCw, ArrowRight, CheckCircle } from "lucide-react";
 
-/* ─────────────────────────────────────────
-   CONTACT INFO DATA
-───────────────────────────────────────── */
-const contactItems = [
+const PINK = "#E8194B";
+const easeOut = [0.16, 1, 0.3, 1];
+
+function generateCaptcha() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let captcha = "";
+  for (let i = 0; i < 6; i++) {
+    captcha += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return captcha;
+}
+
+const contactInfo = [
   {
-    icon: MapPin,
-    label: "Visit Us",
-    value: "5921 Gentle Call, Clarksville, MD 21029",
-    href: "https://www.google.com/maps?q=5921+Gentle+Call+Clarksville+MD",
-    external: true,
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M3.62 1.5h2.76l1.42 3.5-1.72 1.2a10.36 10.36 0 0 0 4.72 4.72l1.2-1.72 3.5 1.42v2.76a1.12 1.12 0 0 1-1.1 1.12C7.78 14.2 1.8 8.22 1.5 2.6A1.12 1.12 0 0 1 3.62 1.5Z" stroke={PINK} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+    text: "(443) 900-3895",
   },
   {
-    icon: Mail,
-    label: "Email Us",
-    value: "info@alliancebehavioraltherapysolutions.com",
-    href: "mailto:info@alliancebehavioraltherapysolutions.com",
-    external: false,
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <rect x="2" y="4.5" width="16" height="11" rx="2" stroke={PINK} strokeWidth="1.5" />
+        <path d="M2 7l8 5 8-5" stroke={PINK} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+    text: "arutere@bpautism.com",
   },
   {
-    icon: Phone,
-    label: "Call Us",
-    value: "(301) 980-9679",
-    href: "tel:+13019809679",
-    external: false,
-  },
-  {
-    icon: FileText,
-    label: "Fax",
-    value: "(301) 890-6517",
-    href: null,
-    external: false,
-  },
-  {
-    icon: Clock,
-    label: "Hours",
-    value: "Mon – Fri · 9:00 AM – 6:00 PM",
-    href: null,
-    external: false,
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M10 1.5C7 1.5 4 4 3 7c0 0 2.5 5 7 5s7-5 7-5C16 4 13 1.5 10 1.5Z" stroke={PINK} strokeWidth="1.5" strokeLinejoin="round" />
+        <circle cx="10" cy="7.5" r="2" stroke={PINK} strokeWidth="1.5" />
+        <path d="M6 14.5c0-2.5 1.8-4 4-4s4 1.5 4 4" stroke={PINK} strokeWidth="1.5" strokeLinecap="round" />
+      </svg>
+    ),
+    text: "3501 Sheffield Manor Terrace, Silver Spring, MD 20904",
   },
 ];
 
-/* ─────────────────────────────────────────
-   ANIMATED COUNTER
-───────────────────────────────────────── */
-function Counter({ target, suffix = "" }) {
-  const [count, setCount] = useState(0);
-  const ref = useRef(null);
-  const started = useRef(false);
+function Contact() {
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [captcha, setCaptcha] = useState("");
+  const [inputCaptcha, setInputCaptcha] = useState("");
+  const [verified, setVerified] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true;
-          let start = 0;
-          const duration = 1400;
-          const step = (timestamp) => {
-            if (!start) start = timestamp;
-            const progress = Math.min((timestamp - start) / duration, 1);
-            const ease = 1 - Math.pow(1 - progress, 3);
-            setCount(Math.floor(ease * target));
-            if (progress < 1) requestAnimationFrame(step);
-          };
-          requestAnimationFrame(step);
-        }
-      },
-      { threshold: 0.5 }
-    );
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, [target]);
-
-  return <span ref={ref}>{count}{suffix}</span>;
-}
-
-/* ─────────────────────────────────────────
-   MAIN COMPONENT
-───────────────────────────────────────── */
-export default function Contact() {
   const API = import.meta.env.VITE_API_URL;
 
-  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [num1, setNum1] = useState(0);
-  const [num2, setNum2] = useState(0);
-  const [captcha, setCaptcha] = useState("");
-
-  const isCaptchaCorrect = captcha.trim() !== "" && parseInt(captcha) === num1 + num2;
-  const isCaptchaWrong = captcha.trim() !== "" && !isCaptchaCorrect;
-
   useEffect(() => {
-    generateCaptcha();
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.06 }
-    );
-    const timer = setTimeout(() => {
-      document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
-    }, 60);
-    return () => { clearTimeout(timer); observer.disconnect(); };
+    refreshCaptcha();
   }, []);
 
-  const generateCaptcha = () => {
-    setNum1(Math.floor(Math.random() * 10) + 1);
-    setNum2(Math.floor(Math.random() * 10) + 1);
-    setCaptcha("");
+  const refreshCaptcha = () => {
+    setCaptcha(generateCaptcha());
+    setInputCaptcha("");
+    setVerified(false);
   };
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const validate = () => {
-    if (!form.name || !form.email || !form.message) {
-      toast.error("Please fill out all required fields.");
-      return false;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      toast.error("Please enter a valid email address.");
-      return false;
-    }
-    if (parseInt(captcha) !== num1 + num2) {
-      toast.error("Incorrect captcha answer. Please try again.");
-      generateCaptcha();
-      return false;
-    }
-    return true;
+  const handleCaptcha = (e) => {
+    const value = e.target.value;
+    setInputCaptcha(value);
+    setVerified(value === captcha);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
-    setLoading(true);
+    if (!form.name || !form.email || !form.message) return toast.error("Please fill required fields");
+    if (!verified) return toast.error("Captcha incorrect ❌");
+
     try {
+      setLoading(true);
       const res = await fetch(`${API}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      const data = await res.json();
-      if (data.success) {
-        setSubmitted(true);
-        setForm({ name: "", email: "", phone: "", message: "" });
-        generateCaptcha();
-      } else {
-        toast.error("Something went wrong. Please try again later.");
-      }
+      if (!res.ok) throw new Error();
+      toast.success("Message sent successfully ✅");
+      setForm({ name: "", email: "", message: "" });
+      refreshCaptcha();
     } catch {
-      toast.error("Network error. Please check your connection.");
+      toast.error("Something went wrong ❌");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
+  };
+
+  const inputBase = {
+    width: "100%",
+    padding: "14px 16px",
+    borderRadius: 12,
+    border: "1.5px solid #e5e7eb",
+    background: "#fafafa",
+    fontSize: 15,
+    color: "#111111",
+    outline: "none",
+    fontFamily: "'Inter', sans-serif",
+    transition: "all 0.2s ease",
+    boxSizing: "border-box",
+  };
+
+  const focusStyle = (e) => {
+    e.target.style.borderColor = PINK;
+    e.target.style.background = "#ffffff";
+    e.target.style.boxShadow = "0 0 0 3px rgba(232, 25, 75, 0.1)";
+  };
+
+  const blurStyle = (e) => {
+    e.target.style.borderColor = "#e5e7eb";
+    e.target.style.background = "#fafafa";
+    e.target.style.boxShadow = "none";
   };
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap');
+    <div style={{ fontFamily: "'Inter', sans-serif" }}>
+      <style>
+        {`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');`}
+      </style>
 
-        .reveal {
-          opacity: 0;
-          transform: translateY(32px);
-          transition: opacity 0.65s cubic-bezier(.22,1,.36,1), transform 0.65s cubic-bezier(.22,1,.36,1);
-        }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-        .reveal-d1 { transition-delay: 80ms; }
-        .reveal-d2 { transition-delay: 180ms; }
-        .reveal-d3 { transition-delay: 280ms; }
+      {/* ─── HERO ─── */}
+      <section
+        className="relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg, #E8194B 0%, #c4123d 50%, #a00e32 100%)" }}
+      >
+        <div
+          className="absolute inset-0 opacity-[0.06] pointer-events-none"
+          style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)`,
+            backgroundSize: "60px 60px",
+          }}
+        />
+        <div className="absolute -top-20 -left-20 w-96 h-96 rounded-full opacity-20 blur-3xl pointer-events-none bg-white" />
+        <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] rounded-full opacity-10 blur-3xl pointer-events-none bg-[#ff6b8a]" />
 
-        /* Floating label inputs */
-        .field { position: relative; }
-        .field input, .field textarea {
-          width: 100%;
-          padding: 20px 18px 8px;
-          background: transparent;
-          border: none;
-          border-bottom: 1.5px solid rgba(13,37,80,0.18);
-          border-radius: 0;
-          color: #0D2550;
-          font-size: 15px;
-          font-family: inherit;
-          outline: none;
-          transition: border-color 0.25s;
-          appearance: none;
-          -webkit-appearance: none;
-        }
-        .field textarea { resize: none; padding-top: 22px; }
-        .field input:focus, .field textarea:focus {
-          border-color: #00B4F0;
-        }
-        .field label {
-          position: absolute;
-          left: 18px; top: 14px;
-          font-size: 13px;
-          font-family: 'Rajdhani', sans-serif;
-          font-weight: 600;
-          letter-spacing: 1.5px;
-          text-transform: uppercase;
-          color: rgba(13,37,80,0.4);
-          pointer-events: none;
-          transition: all 0.2s;
-        }
-        .field input:focus ~ label,
-        .field input:not(:placeholder-shown) ~ label,
-        .field textarea:focus ~ label,
-        .field textarea:not(:placeholder-shown) ~ label {
-          top: 6px;
-          font-size: 10px;
-          color: #00B4F0;
-          letter-spacing: 2px;
-        }
+        <Container className="relative pt-24 pb-16 md:pt-36 md:pb-24 text-center">
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: easeOut }}>
+            <span
+              className="inline-block text-xs font-bold uppercase tracking-[0.12em] mb-5"
+              style={{ color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.2)", padding: "6px 16px", borderRadius: 100 }}
+            >
+              Get in touch
+            </span>
+          </motion.div>
 
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: easeOut, delay: 0.1 }}
+            className="leading-[1.08]"
+            style={{ fontSize: "clamp(2.2rem, 5vw, 4.75rem)", fontWeight: 800, color: "#ffffff", letterSpacing: "-0.04em" }}
+          >
+            Contact <span style={{ color: "rgba(255,255,255,0.85)" }}>Us</span>
+          </motion.h1>
 
-        /* Scan line on hero */
-        @keyframes scan { 0%{transform:translateY(-100%)} 100%{transform:translateY(400%)} }
-        .scan-line {
-          position: absolute; left: 0; right: 0; height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(0,180,240,0.3), transparent);
-          animation: scan 4s ease-in-out infinite;
-          pointer-events: none;
-        }
+          <motion.p
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: easeOut, delay: 0.25 }}
+            style={{ fontSize: 18, color: "rgba(255,255,255,0.8)", lineHeight: 1.7, maxWidth: 520, margin: "24px auto 0" }}
+          >
+            Get in touch with our team and start your child’s journey today.
+          </motion.p>
+        </Container>
+      </section>
 
-        /* Dot grid */
-        .dot-grid {
-          background-image: radial-gradient(circle, rgba(0,180,240,0.18) 1px, transparent 1px);
-          background-size: 24px 24px;
-        }
+      {/* ─── MAIN ─── */}
+      <section className="relative overflow-hidden py-16 md:py-28" style={{ background: "#FAFAF8" }}>
+        <div className="absolute top-20 right-[10%] w-72 h-72 rounded-full opacity-[0.06] blur-3xl pointer-events-none" style={{ background: PINK }} />
+        <div className="absolute bottom-20 left-[10%] w-64 h-64 rounded-full opacity-[0.07] blur-3xl pointer-events-none" style={{ background: "#5aaa00" }} />
 
-        /* Contact item hover */
-        .contact-item {
-          position: relative;
-          padding: 20px 0;
-          transition: all 0.3s;
-        }
-        .contact-item::after {
-          content: '';
-          position: absolute;
-          bottom: 0; left: 0;
-          width: 0; height: 1px;
-          background: #00B4F0;
-          transition: width 0.4s cubic-bezier(.22,1,.36,1);
-        }
-        .contact-item:hover::after { width: 100%; }
-        .contact-item:hover .ci-icon { background: rgba(0,180,240,0.15); color: #00B4F0; }
-        .ci-icon {
-          width: 40px; height: 40px; border-radius: 10px;
-          background: rgba(255,255,255,0.06);
-          display: flex; align-items: center; justify-content: center;
-          flex-shrink: 0;
-          transition: all 0.3s;
-        }
+        <Container className="relative grid md:grid-cols-2 gap-12 lg:gap-20 items-start">
 
-        /* Submit button shimmer */
-        @keyframes shimmer {
-          0%   { background-position: -200% center; }
-          100% { background-position:  200% center; }
-        }
-        .btn-submit {
-          background: #0D2550;
-          position: relative;
-          overflow: hidden;
-        }
-        .btn-submit::after {
-          content: '';
-          position: absolute; inset: 0;
-          background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.07) 50%, transparent 60%);
-          background-size: 200% auto;
-          animation: shimmer 2.5s linear infinite;
-        }
-        .btn-submit:hover { background: #123068; }
-
-        /* Success card */
-        @keyframes popIn {
-          from { opacity: 0; transform: scale(0.94) translateY(12px); }
-          to   { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        .success-card { animation: popIn 0.5s cubic-bezier(.22,1,.36,1) both; }
-
-        /* Stat bar */
-        .stat-bar {
-          border-right: 1px solid rgba(255,255,255,0.10);
-        }
-        .stat-bar:last-child { border-right: none; }
-
-        /* Map pin pulse */
-        @keyframes ping {
-          75%, 100% { transform: scale(2); opacity: 0; }
-        }
-        .ping { animation: ping 1.4s cubic-bezier(0,0,.2,1) infinite; }
-
-        /* Number input for captcha */
-        .captcha-input {
-          background: rgba(13,37,80,0.04);
-          border: 1.5px solid rgba(13,37,80,0.12);
-          border-radius: 10px;
-          padding: 10px 16px;
-          font-size: 15px;
-          color: #0D2550;
-          width: 96px;
-          text-align: center;
-          outline: none;
-          transition: border-color 0.2s;
-        }
-        .captcha-input:focus { border-color: #00B4F0; }
-      `}</style>
-
-      <section style={{ fontFamily: "'Rajdhani', sans-serif", background: "#F0F4FA" }}>
-
-        {/* ═══════════════════════════════════════
-            HERO
-        ═══════════════════════════════════════ */}
-        <div className="bg-[#0D2550] relative overflow-hidden" style={{ minHeight: 340 }}>
-          {/* Dot grid texture */}
-          <div className="dot-grid absolute inset-0 opacity-40 pointer-events-none" />
-          {/* Radial glow */}
-          <div className="absolute inset-0 pointer-events-none"
-            style={{ background: "radial-gradient(ellipse 70% 60% at 50% 0%, rgba(0,180,240,0.12), transparent 70%)" }} />
-          {/* Scan line */}
-          <div className="scan-line" />
-          {/* Corner accents */}
-          <div className="absolute top-6 left-6 w-10 h-10 border-l-2 border-t-2 border-[#00B4F0]/30 rounded-tl-lg pointer-events-none" />
-          <div className="absolute top-6 right-6 w-10 h-10 border-r-2 border-t-2 border-[#00B4F0]/30 rounded-tr-lg pointer-events-none" />
-          <div className="absolute bottom-6 left-6 w-10 h-10 border-l-2 border-b-2 border-[#00B4F0]/30 rounded-bl-lg pointer-events-none" />
-          <div className="absolute bottom-6 right-6 w-10 h-10 border-r-2 border-b-2 border-[#00B4F0]/30 rounded-br-lg pointer-events-none" />
-
-          <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-0 text-center">
-            {/* Eyebrow */}
-            <div className="inline-flex items-center gap-2 mb-6">
-              <div className="w-5 h-px bg-[#00B4F0]" />
-              <span style={{
-                fontFamily: "'Rajdhani', sans-serif",
-                fontWeight: 700,
-                fontSize: 11,
-                letterSpacing: "3px",
-                textTransform: "uppercase",
-                color: "#00B4F0",
-              }}>
-                Let's Talk
-              </span>
-              <div className="w-5 h-px bg-[#00B4F0]" />
-            </div>
-
-            <h1 style={{
-              fontFamily: "'Rajdhani', sans-serif",
-              fontWeight: 700,
-              fontSize: "clamp(36px, 5vw, 64px)",
-              lineHeight: 1.0,
-              letterSpacing: "2px",
-              textTransform: "uppercase",
-              color: "white",
-              marginBottom: 16,
-            }}>
-              We'd Love to<br/>
-              <span style={{ color: "#00B4F0" }}>Hear From You</span>
-            </h1>
-
-            <p style={{
-              color: "rgba(255,255,255,0.60)",
-              fontSize: "clamp(14px, 1.5vw, 16px)",
-              lineHeight: 1.7,
-              maxWidth: 480,
-              margin: "0 auto 40px",
-              fontFamily: "sans-serif",
-              fontWeight: 400,
-            }}>
-              Reach out with questions about our Therapy services, scheduling, or insurance coverage. Our team responds within 24 hours.
+          {/* LEFT INFO */}
+          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: easeOut }}>
+            <motion.div
+              initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: "easeOut" }}
+              style={{ height: 3, width: 48, borderRadius: 4, background: PINK, transformOrigin: "left", marginBottom: 24 }}
+            />
+            <h2 style={{ fontSize: "clamp(2rem, 3.5vw, 3rem)", fontWeight: 800, color: "#0f0f0f", letterSpacing: "-0.035em", lineHeight: 1.15, marginBottom: 24 }}>
+              Let's Connect
+            </h2>
+            <p style={{ fontSize: 16, color: "#6b7280", lineHeight: 1.75, marginBottom: 40, maxWidth: 440 }}>
+              We’re here to support your child’s growth with personalized ABA therapy. Reach out to us for consultations, questions, or to get started.
             </p>
 
-            {/* Stat bar */}
-            {/* <div className="grid grid-cols-3 border-t border-white/10 mt-2">
-              {[
-                { num: 500, suffix: "+", label: "Families Served" },
-                { num: 24, suffix: "h", label: "Response Time" },
-                { num: 10, suffix: "+", label: "Years of Care" },
-              ].map((s, i) => (
-                <div key={i} className="stat-bar py-6">
-                  <p style={{
-                    fontFamily: "'Rajdhani', sans-serif",
-                    fontWeight: 700,
-                    fontSize: "clamp(26px, 3vw, 38px)",
-                    color: "white",
-                    lineHeight: 1,
-                    marginBottom: 4,
-                  }}>
-                    <Counter target={s.num} suffix={s.suffix} />
-                  </p>
-                  <p style={{
-                    fontFamily: "'Rajdhani', sans-serif",
-                    fontWeight: 600,
-                    fontSize: 11,
-                    letterSpacing: "2px",
-                    textTransform: "uppercase",
-                    color: "rgba(255,255,255,0.40)",
-                  }}>
-                    {s.label}
+            <div className="space-y-6">
+              {contactInfo.map((item, i) => (
+                <div key={i} className="flex items-start gap-4">
+                  <div className="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center mt-0.5" style={{ background: "#fff0f3", border: "1px solid rgba(232, 25, 75, 0.1)" }}>
+                    {item.icon}
+                  </div>
+                  <p style={{ fontSize: 15.5, color: "#374151", lineHeight: 1.5, fontWeight: 500, paddingTop: 2 }}>
+                    {item.text}
                   </p>
                 </div>
               ))}
-            </div> */}
-          </div>
-        </div>
-
-        {/* ═══════════════════════════════════════
-            MAIN CONTENT GRID
-        ═══════════════════════════════════════ */}
-        <div className="max-w-6xl mx-auto px-6 py-16 md:py-20">
-          <div className="grid lg:grid-cols-[420px_1fr] gap-8 items-start">
-
-            {/* ── LEFT: INFO CARD ── */}
-            <div className="reveal reveal-d1 space-y-0 bg-[#0D2550] rounded-2xl overflow-hidden"
-              style={{ boxShadow: "0 24px 64px rgba(13,37,80,0.22)" }}>
-
-              {/* Card header */}
-              <div className="px-8 pt-8 pb-6 border-b border-white/10">
-                <p style={{
-                  fontFamily: "'Rajdhani', sans-serif",
-                  fontWeight: 700,
-                  fontSize: 11,
-                  letterSpacing: "3px",
-                  textTransform: "uppercase",
-                  color: "#00B4F0",
-                  marginBottom: 8,
-                }}>
-                  Contact Information
-                </p>
-                <p style={{
-                  color: "rgba(255,255,255,0.55)",
-                  fontSize: 14,
-                  lineHeight: 1.6,
-                  fontFamily: "sans-serif",
-                  fontWeight: 400,
-                }}>
-                  Our care team is available Monday through Friday. We look forward to connecting with your family.
-                </p>
-              </div>
-
-              {/* Contact items */}
-              <div className="px-8 py-2">
-                {contactItems.map(({ icon: Icon, label, value, href, external }, i) => (
-                  <div key={i} className="contact-item border-b border-white/[0.07] last:border-0">
-                    <div className="flex items-start gap-4">
-                      <div className="ci-icon mt-0.5">
-                        <Icon size={17} strokeWidth={1.8} color="#00B4F0" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p style={{
-                          fontFamily: "'Rajdhani', sans-serif",
-                          fontWeight: 700,
-                          fontSize: 11,
-                          letterSpacing: "2px",
-                          textTransform: "uppercase",
-                          color: "rgba(255,255,255,0.35)",
-                          marginBottom: 3,
-                        }}>
-                          {label}
-                        </p>
-                        {href ? (
-                          <a
-                            href={href}
-                            target={external ? "_blank" : undefined}
-                            rel={external ? "noopener noreferrer" : undefined}
-                            style={{
-                              color: "rgba(255,255,255,0.80)",
-                              fontSize: 15,
-                              fontFamily: "sans-serif",
-                              fontWeight: 400,
-                              lineHeight: 1.5,
-                              textDecoration: "none",
-                              wordBreak: "break-all",
-                              transition: "color 0.2s",
-                            }}
-                            onMouseEnter={e => e.currentTarget.style.color = "#fff"}
-                            onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.80)"}
-                          >
-                            {value}
-                          </a>
-                        ) : (
-                          <p style={{ color: "rgba(255,255,255,0.80)", fontSize: 15, fontFamily: "sans-serif", fontWeight: 400 }}>
-                            {value}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Card footer CTA */}
-              <div className="mx-8 mb-8 mt-4 rounded-xl p-5"
-                style={{ background: "rgba(0,180,240,0.08)", border: "1px solid rgba(0,180,240,0.18)" }}>
-                <p style={{
-                  fontFamily: "'Rajdhani', sans-serif",
-                  fontWeight: 700,
-                  fontSize: 13,
-                  letterSpacing: "1px",
-                  textTransform: "uppercase",
-                  color: "#00B4F0",
-                  marginBottom: 4,
-                }}>
-                  Insurance Accepted
-                </p>
-                <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, fontFamily: "sans-serif", lineHeight: 1.6 }}>
-                  We work with most major insurance providers. Contact us to verify your coverage.
-                </p>
-              </div>
             </div>
 
-            {/* ── RIGHT: FORM ── */}
-            <div className="reveal reveal-d2">
-              {submitted ? (
-                <div className="success-card bg-white rounded-2xl p-12 text-center"
-                  style={{ boxShadow: "0 8px 40px rgba(13,37,80,0.10)", border: "1px solid rgba(13,37,80,0.06)" }}>
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
-                    style={{ background: "rgba(0,180,240,0.10)" }}>
-                    <CheckCircle size={32} color="#00B4F0" strokeWidth={1.5} />
-                  </div>
-                  <h3 style={{
-                    fontFamily: "'Rajdhani', sans-serif",
-                    fontWeight: 700,
-                    fontSize: 26,
-                    textTransform: "uppercase",
-                    letterSpacing: "1px",
-                    color: "#0D2550",
-                    marginBottom: 12,
-                  }}>
-                    Message Sent!
-                  </h3>
-                  <p style={{ color: "rgba(13,37,80,0.60)", fontSize: 15, lineHeight: 1.7, fontFamily: "sans-serif", marginBottom: 28 }}>
-                    Thank you for reaching out. Our team will be in touch within 24 hours.
-                  </p>
-                  <button
-                    onClick={() => setSubmitted(false)}
-                    style={{
-                      fontFamily: "'Rajdhani', sans-serif",
-                      fontWeight: 700,
-                      fontSize: 12,
-                      letterSpacing: "2px",
-                      textTransform: "uppercase",
-                      color: "#0D2550",
-                      background: "transparent",
-                      border: "1.5px solid rgba(13,37,80,0.20)",
-                      borderRadius: 10,
-                      padding: "12px 28px",
-                      cursor: "pointer",
-                      transition: "all 0.2s",
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = "#0D2550"; e.currentTarget.style.background = "rgba(13,37,80,0.04)"; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(13,37,80,0.20)"; e.currentTarget.style.background = "transparent"; }}
+         
+          </motion.div>
+
+          {/* RIGHT FORM */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: easeOut, delay: 0.15 }}
+            style={{ background: "#ffffff", borderRadius: 24, border: "1.5px solid #f0eff0", padding: "32px 28px 28px", boxShadow: "0 20px 40px rgba(0,0,0,0.04)" }}
+          >
+            <h3 style={{ fontSize: 20, fontWeight: 700, color: "#111111", letterSpacing: "-0.02em", marginBottom: 28 }}>
+              Send us a message
+            </h3>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <input type="text" name="name" placeholder="Full Name *" value={form.name} onChange={handleChange} required style={inputBase} onFocus={focusStyle} onBlur={blurStyle} />
+              <input type="email" name="email" placeholder="Email Address *" value={form.email} onChange={handleChange} required style={inputBase} onFocus={focusStyle} onBlur={blurStyle} />
+              <textarea name="message" placeholder="Your Message *" rows="4" value={form.message} onChange={handleChange} required style={{ ...inputBase, resize: "none" }} onFocus={focusStyle} onBlur={blurStyle} />
+
+              {/* CAPTCHA */}
+              <div>
+                <div className="flex justify-between items-center px-5 py-3.5 rounded-xl" style={{ background: "#FAFAF8", border: "1.5px solid #f0eff0" }}>
+                  <span style={{ fontFamily: "'Courier New', monospace", fontSize: 20, fontWeight: 700, letterSpacing: "0.2em", color: "#374151", userSelect: "none" }}>
+                    {captcha}
+                  </span>
+                  <button type="button" onClick={refreshCaptcha} style={{ background: "transparent", border: "none", cursor: "pointer", color: "#9ca3af", padding: 4 }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = PINK} onMouseLeave={(e) => e.currentTarget.style.color = "#9ca3af"}
                   >
-                    Send Another
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M4 10a6 6 0 0 1 9.2-5.1M16 10a6 6 0 0 1-9.2 5.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                      <path d="M13.5 2.5v4h-4M6.5 17.5v-4h4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                   </button>
                 </div>
-              ) : (
-                <div className="bg-white rounded-2xl p-8 md:p-10"
-                  style={{ boxShadow: "0 8px 40px rgba(13,37,80,0.10)", border: "1px solid rgba(13,37,80,0.06)" }}>
 
-                  {/* Form header */}
-                  <div className="mb-8">
-                    <p style={{
-                      fontFamily: "'Rajdhani', sans-serif",
-                      fontWeight: 700,
-                      fontSize: 11,
-                      letterSpacing: "3px",
-                      textTransform: "uppercase",
-                      color: "#00B4F0",
-                      marginBottom: 6,
-                    }}>
-                      Send a Message
-                    </p>
-                    <h2 style={{
-                      fontFamily: "'Rajdhani', sans-serif",
-                      fontWeight: 700,
-                      fontSize: "clamp(22px, 2.5vw, 30px)",
-                      textTransform: "uppercase",
-                      letterSpacing: "1px",
-                      color: "#0D2550",
-                      lineHeight: 1.1,
-                    }}>
-                      How Can We<br />Help Your Family?
-                    </h2>
-                  </div>
+                <input
+                  type="text"
+                  placeholder="Enter captcha above"
+                  value={inputCaptcha}
+                  onChange={handleCaptcha}
+                  style={{
+                    ...inputBase,
+                    marginTop: 12,
+                    borderColor: verified ? "#5aaa00" : (inputCaptcha.length > 0 && !verified ? "#ef4444" : "#e5e7eb"),
+                    background: verified ? "#f2faeb" : "#fafafa",
+                  }}
+                  onFocus={(e) => { if (!verified) focusStyle(e); }}
+                  onBlur={(e) => { if (!verified) blurStyle(e); }}
+                />
 
-                  <form onSubmit={handleSubmit}>
-                    {/* 2-col: Name + Phone */}
-                    <div className="grid sm:grid-cols-2 gap-0 sm:gap-6">
-                      <div className="field mb-6">
-                        <input
-                          id="name" name="name" type="text"
-                          placeholder=" " value={form.name} onChange={handleChange}
-                        />
-                        <label htmlFor="name">Full Name *</label>
-                      </div>
-                      <div className="field mb-6">
-                        <input
-                          id="phone" name="phone" type="tel"
-                          placeholder=" " value={form.phone} onChange={handleChange}
-                        />
-                        <label htmlFor="phone">Phone (Optional)</label>
-                      </div>
-                    </div>
+                <div className="h-6 mt-2">
+                  {verified && (
+                    <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-1.5 text-sm" style={{ color: "#5aaa00", fontWeight: 600 }}>
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                      Captcha verified successfully
+                    </motion.p>
+                  )}
+                  {!verified && inputCaptcha.length > 0 && (
+                    <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-1.5 text-sm" style={{ color: "#ef4444", fontWeight: 500 }}>
+                      Incorrect captcha, please try again
+                    </motion.p>
+                  )}
+                </div>
+              </div>
 
-                    {/* Email */}
-                    <div className="field mb-6">
-                      <input
-                        id="email" name="email" type="email"
-                        placeholder=" " value={form.email} onChange={handleChange}
-                      />
-                      <label htmlFor="email">Email Address *</label>
-                    </div>
-
-                    {/* Message */}
-                    <div className="field mb-6">
-                      <textarea
-                        id="message" name="message" rows="5"
-                        placeholder=" " value={form.message} onChange={handleChange}
-                      />
-                      <label htmlFor="message">How Can We Help? *</label>
-                    </div>
-
-                    {/* Captcha */}
-                    <div className="mb-6 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-4"
-                      style={{ background: "rgba(13,37,80,0.03)", border: "1px solid rgba(13,37,80,0.08)" }}>
-                      <div className="flex items-center gap-3 flex-shrink-0">
-                        <p style={{
-                          fontFamily: "'Rajdhani', sans-serif",
-                          fontWeight: 600,
-                          fontSize: 15,
-                          color: "rgba(13,37,80,0.70)",
-                          whiteSpace: "nowrap",
-                        }}>
-                          Verify:{" "}
-                          <strong style={{ color: "#0D2550" }}>{num1} + {num2} = ?</strong>
-                        </p>
-                        <button
-                          type="button" onClick={generateCaptcha}
-                          title="Refresh"
-                          style={{
-                            background: "none", border: "none", cursor: "pointer",
-                            color: "rgba(13,37,80,0.35)", padding: 6, borderRadius: 8,
-                            display: "flex", alignItems: "center", transition: "all 0.2s",
-                          }}
-                          onMouseEnter={e => { e.currentTarget.style.color = "#00B4F0"; e.currentTarget.style.background = "rgba(0,180,240,0.08)"; }}
-                          onMouseLeave={e => { e.currentTarget.style.color = "rgba(13,37,80,0.35)"; e.currentTarget.style.background = "none"; }}
-                        >
-                          <RefreshCw size={14} strokeWidth={2} />
-                        </button>
-                      </div>
-
-                      <div className="flex items-center gap-3">
-                        <input
-                          type="number" placeholder="Answer"
-                          value={captcha}
-                          onChange={e => setCaptcha(e.target.value)}
-                          className="captcha-input"
-                          style={{
-                            borderColor: isCaptchaCorrect
-                              ? "rgba(0,180,240,0.5)"
-                              : isCaptchaWrong
-                              ? "rgba(239,68,68,0.4)"
-                              : undefined,
-                          }}
-                        />
-                        {isCaptchaCorrect && (
-                          <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                            style={{ background: "rgba(0,180,240,0.10)", border: "1px solid rgba(0,180,240,0.30)" }}>
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                              <path d="M2 6l3 3 5-5" stroke="#00B4F0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                          </div>
-                        )}
-                        {isCaptchaWrong && (
-                          <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                            style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)" }}>
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                              <path d="M3 3l6 6M9 3l-6 6" stroke="#EF4444" strokeWidth="2" strokeLinecap="round"/>
-                            </svg>
-                          </div>
-                        )}
-                      </div>
-                      {isCaptchaWrong && (
-                        <p style={{ color: "#EF4444", fontSize: 12, fontFamily: "sans-serif" }}>
-                          Incorrect. Try again or refresh.
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Submit */}
-                    <button
+              {/* SUBMIT AREA */}
+              <div className="min-h-[56px]">
+                <AnimatePresence mode="wait">
+                  {!verified ? (
+                    <motion.div
+                      key="locked"
+                      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -10 }}
+                      className="flex items-center justify-center gap-2 w-full py-4 rounded-xl text-sm"
+                      style={{ background: "#f3f4f6", color: "#9ca3af", fontWeight: 500, border: "1.5px dashed #e5e7eb" }}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
+                        <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                        <circle cx="8" cy="10.5" r="1" fill="currentColor" />
+                      </svg>
+                      Solve captcha to unlock submit
+                    </motion.div>
+                  ) : (
+                    <motion.button
+                      key="unlocked"
+                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.3, ease: easeOut }}
                       type="submit"
-                      disabled={loading || !isCaptchaCorrect}
-                      className="btn-submit w-full flex items-center justify-center gap-3"
-                      style={{
-                        fontFamily: "'Rajdhani', sans-serif",
-                        fontWeight: 700,
-                        fontSize: 14,
-                        letterSpacing: "2px",
-                        textTransform: "uppercase",
-                        color: "white",
-                        border: "none",
-                        borderRadius: 12,
-                        padding: "18px 24px",
-                        cursor: loading || !isCaptchaCorrect ? "not-allowed" : "pointer",
-                        opacity: loading || !isCaptchaCorrect ? 0.5 : 1,
-                        transition: "all 0.3s",
-                      }}
+                      disabled={loading}
+                      className="w-full py-4 rounded-xl text-[15px] font-semibold transition-all duration-300 disabled:opacity-70 hover:shadow-lg active:scale-[0.98] flex items-center justify-center gap-2"
+                      style={{ background: loading ? "#d1d5db" : PINK, color: "#ffffff", border: "none", cursor: loading ? "not-allowed" : "pointer" }}
                     >
                       {loading ? (
                         <>
-                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                            style={{ animation: "spin 1s linear infinite" }}>
-                            <circle cx="8" cy="8" r="6" stroke="rgba(255,255,255,0.3)" strokeWidth="2"/>
-                            <path d="M8 2a6 6 0 0 1 6 6" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                          <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
-                          Sending…
+                          Sending...
                         </>
                       ) : (
                         <>
                           Send Message
-                          <ArrowRight size={16} strokeWidth={2.5} />
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
                         </>
                       )}
-                    </button>
-
-                    <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-
-                    {/* Trust note */}
-                    <p style={{
-                      textAlign: "center",
-                      color: "rgba(13,37,80,0.35)",
-                      fontSize: 12,
-                      fontFamily: "sans-serif",
-                      marginTop: 16,
-                      letterSpacing: "0.3px",
-                    }}>
-                      We typically respond within 1 business day.
-                    </p>
-                  </form>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* ═══════════════════════════════════════
-            MAP
-        ═══════════════════════════════════════ */}
-        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-24">
-          <div className="reveal reveal-d3">
-            {/* Section header */}
-            <div className="flex items-center gap-6 mb-6">
-              <div>
-                <p style={{
-                  fontFamily: "'Rajdhani', sans-serif",
-                  fontWeight: 700,
-                  fontSize: 11,
-                  letterSpacing: "3px",
-                  textTransform: "uppercase",
-                  color: "#00B4F0",
-                  marginBottom: 4,
-                }}>
-                  Location
-                </p>
-                <h2 style={{
-                  fontFamily: "'Rajdhani', sans-serif",
-                  fontWeight: 700,
-                  fontSize: "clamp(20px, 2.5vw, 28px)",
-                  textTransform: "uppercase",
-                  letterSpacing: "1px",
-                  color: "#0D2550",
-                  lineHeight: 1.1,
-                }}>
-                  Find Us On the Map
-                </h2>
+                    </motion.button>
+                  )}
+                </AnimatePresence>
               </div>
-              <div className="flex-1 h-px" style={{ background: "rgba(13,37,80,0.10)" }} />
-              <a
-                href="https://www.google.com/maps?q=5921+Gentle+Call+Clarksville+MD"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  fontFamily: "'Rajdhani', sans-serif",
-                  fontWeight: 700,
-                  fontSize: 11,
-                  letterSpacing: "2px",
-                  textTransform: "uppercase",
-                  color: "#0D2550",
-                  textDecoration: "none",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  flexShrink: 0,
-                  opacity: 0.6,
-                  transition: "opacity 0.2s",
-                }}
-                onMouseEnter={e => e.currentTarget.style.opacity = "1"}
-                onMouseLeave={e => e.currentTarget.style.opacity = "0.6"}
-              >
-                Open in Maps <ArrowRight size={12} strokeWidth={2.5} />
-              </a>
-            </div>
+            </form>
+          </motion.div>
 
-            {/* Map */}
-            <div className="relative rounded-2xl overflow-hidden"
-              style={{
-                boxShadow: "0 8px 40px rgba(13,37,80,0.12)",
-                border: "1px solid rgba(13,37,80,0.08)",
-              }}>
-              {/* Animated pin */}
-              <div className="absolute top-1/2 left-1/2 z-10 pointer-events-none"
-                style={{ transform: "translate(-50%, -50%)" }}>
-                <div style={{ position: "relative", width: 18, height: 18 }}>
-                  <div className="ping" style={{
-                    position: "absolute", inset: 0,
-                    borderRadius: "50%",
-                    background: "#EF4444",
-                    opacity: 0.5,
-                  }} />
-                  <div style={{
-                    position: "relative",
-                    width: 18, height: 18,
-                    borderRadius: "50%",
-                    background: "#EF4444",
-                    boxShadow: "0 0 0 3px white, 0 4px 12px rgba(239,68,68,0.5)",
-                  }} />
-                </div>
-              </div>
-
-              <iframe
-                src="https://maps.google.com/maps?q=5921+Gentle+Call+Clarksville+MD+21029&t=&z=15&ie=UTF8&iwloc=&output=embed"
-                width="100%"
-                height="400"
-                style={{ border: 0, display: "block", filter: "saturate(0.85) contrast(1.05)" }}
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Office Location Map"
-              />
-            </div>
-
-            {/* Address strip below map */}
-            <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2">
-              <div className="flex items-center gap-2">
-                <MapPin size={13} color="#00B4F0" strokeWidth={2} />
-                <span style={{ color: "rgba(13,37,80,0.60)", fontSize: 13, fontFamily: "sans-serif" }}>
-                  5921 Gentle Call, Clarksville, MD 21029
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock size={13} color="#00B4F0" strokeWidth={2} />
-                <span style={{ color: "rgba(13,37,80,0.60)", fontSize: 13, fontFamily: "sans-serif" }}>
-                  Mon – Fri · 9:00 AM – 6:00 PM
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        </Container>
       </section>
-    </>
+    </div>
   );
 }
+
+export default Contact;

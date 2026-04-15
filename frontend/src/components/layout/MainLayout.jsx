@@ -1,6 +1,5 @@
 import { useState } from "react";
-import TopBar from "../common/TopBar";
-import Navbar from "../common/Navbar";
+ import Navbar from "../common/Navbar";
 import Footer from "../common/Footer";
 
 export default function MainLayout({ children }) {
@@ -8,8 +7,7 @@ export default function MainLayout({ children }) {
 
   return (
     <>
-      <TopBar visible={topBarVisible} setVisible={setTopBarVisible} />
-      <Navbar topBarVisible={topBarVisible} />
+       <Navbar topBarVisible={topBarVisible} />
       <main>{children}</main>
       <Footer />
     </>

@@ -1,19 +1,20 @@
 import Hero from "../sections/Hero";
-import Stats from "../sections/Stats";
+import Trust from "../sections/Trust";
 import Services from "../sections/Services";
+import MissionVision from "../sections/MissionVision";
 import WhyUs from "../sections/WhyUs";
-import FAQ from "../sections/FAQ";
+
 import CTA from "../sections/CTA";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <Stats />
+      <Trust />
       <Services />
+      <MissionVision />
       <WhyUs />
-      <FAQ />
-      <CTA />
+     <CTA />
     </>
   );
 }
