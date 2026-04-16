@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 
 const PINK = "#E8194B";
@@ -79,6 +79,147 @@ const selectStyle = {
   cursor: "pointer",
 };
 
+// ─── Attractive Centered Modal Component ─────────────────────────────────────
+const StatusModal = ({ type, onClose }) => {
+  const isSuccess = type === "success";
+
+  return (
+    <motion.div
+      className="fixed inset-0 flex items-center justify-center p-4"
+      style={{ zIndex: 100, backgroundColor: "rgba(0, 0, 0, 0.5)", backdropFilter: "blur(4px)" }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.85, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.9, opacity: 0, y: 10 }}
+        transition={{ type: "spring", damping: 25, stiffness: 350 }}
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: "#ffffff",
+          borderRadius: 24,
+          padding: "40px 32px 32px",
+          maxWidth: 400,
+          width: "100%",
+          textAlign: "center",
+          boxShadow: "0 25px 60px -12px rgba(0, 0, 0, 0.3)",
+          fontFamily: "'Inter', sans-serif",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {/* Subtle top gradient accent */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "4px",
+            background: isSuccess 
+              ? "linear-gradient(90deg, #16a34a, #22c55e)" 
+              : `linear-gradient(90deg, ${PINK}, #ff6b8a)`,
+          }}
+        />
+
+        {/* Animated Icon */}
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", damping: 15, stiffness: 200, delay: 0.15 }}
+          style={{
+            width: 72,
+            height: 72,
+            borderRadius: "50%",
+            background: isSuccess ? "rgba(22, 163, 74, 0.08)" : "rgba(232, 25, 75, 0.08)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "0 auto 24px",
+          }}
+        >
+          {isSuccess ? (
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
+              <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" fill="#16a34a" opacity="0.1" />
+              <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" stroke="#16a34a" strokeWidth="1.5" />
+              <path d="M8 12.5l2.5 3L16 10" stroke="#16a34a" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          ) : (
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
+              <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" fill={PINK} opacity="0.1" />
+              <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" stroke={PINK} strokeWidth="1.5" />
+              <path d="M15 9l-6 6M9 9l6 6" stroke={PINK} strokeWidth="2.2" strokeLinecap="round" />
+            </svg>
+          )}
+        </motion.div>
+
+        <motion.h3
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+          style={{
+            fontSize: 20,
+            fontWeight: 700,
+            color: "#111111",
+            marginBottom: 8,
+            letterSpacing: "-0.02em",
+          }}
+        >
+          {isSuccess ? "Application Submitted!" : "Submission Failed"}
+        </motion.h3>
+
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          style={{
+            fontSize: 14.5,
+            color: "#6b7280",
+            lineHeight: 1.6,
+            marginBottom: 28,
+          }}
+        >
+          {isSuccess 
+            ? "Thank you for applying. Our team will review your application and reach out within 24 hours." 
+            : "We encountered an error sending your application. Please check your connection and try again."}
+        </motion.p>
+
+        <motion.button
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={onClose}
+          style={{
+            width: "100%",
+            padding: "14px 24px",
+            borderRadius: 14,
+            border: "none",
+            cursor: "pointer",
+            fontSize: 15,
+            fontWeight: 600,
+            fontFamily: "'Inter', sans-serif",
+            color: "#ffffff",
+            background: isSuccess 
+              ? "linear-gradient(90deg, #16a34a, #22c55e)" 
+              : PINK,
+            boxShadow: isSuccess 
+              ? "0 8px 24px rgba(22, 163, 74, 0.2)" 
+              : "0 8px 24px rgba(232, 25, 75, 0.2)",
+            letterSpacing: "-0.01em",
+          }}
+        >
+          {isSuccess ? "Got it, thanks!" : "Try Again"}
+        </motion.button>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 export default function CareerPage() {
   const [form, setForm] = useState({
     name: "",
@@ -88,7 +229,7 @@ export default function CareerPage() {
   });
 
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
+  const [modal, setModal] = useState(null); // 'success' | 'error' | null
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -109,21 +250,20 @@ export default function CareerPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setSuccess("");
 
     try {
-      const res = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API_URL}/api/careers/apply`,
         form
       );
 
-      setSuccess("Application submitted successfully 🎉");
+      setModal("success");
       setForm({ name: "", email: "", phone: "", role: "" });
     } catch (err) {
-      alert("Something went wrong");
+      setModal("error");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -131,6 +271,11 @@ export default function CareerPage() {
       <style>
         {`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');`}
       </style>
+
+      {/* ─── MODALS ─── */}
+      <AnimatePresence>
+        {modal && <StatusModal type={modal} onClose={() => setModal(null)} />}
+      </AnimatePresence>
 
       {/* ─── HERO ─── */}
       <section
@@ -607,23 +752,6 @@ export default function CareerPage() {
                   {loading ? "Submitting..." : "Submit Application"}
                 </button>
               </motion.div>
-
-              {/* Success */}
-              {success && (
-                <motion.p
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-center mt-1"
-                  style={{
-                    fontSize: 14.5,
-                    fontWeight: 600,
-                    color: "#16a34a",
-                    fontFamily: "'Inter', sans-serif",
-                  }}
-                >
-                  {success}
-                </motion.p>
-              )}
             </form>
           </motion.div>
         </div>
