@@ -22,7 +22,9 @@ const contactInfo = [
         <path d="M3.62 1.5h2.76l1.42 3.5-1.72 1.2a10.36 10.36 0 0 0 4.72 4.72l1.2-1.72 3.5 1.42v2.76a1.12 1.12 0 0 1-1.1 1.12C7.78 14.2 1.8 8.22 1.5 2.6A1.12 1.12 0 0 1 3.62 1.5Z" stroke={PINK} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
-    text: "(443) 900-3895",
+    label: "Phone",
+    text: "+1 (443) 900-3895",
+    href: "tel:+14439003895",
   },
   {
     icon: (
@@ -31,7 +33,9 @@ const contactInfo = [
         <path d="M2 7l8 5 8-5" stroke={PINK} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
+    label: "Email",
     text: "arutere@bpautism.com",
+    href: "mailto:arutere@bpautism.com",
   },
   {
     icon: (
@@ -41,7 +45,9 @@ const contactInfo = [
         <path d="M6 14.5c0-2.5 1.8-4 4-4s4 1.5 4 4" stroke={PINK} strokeWidth="1.5" strokeLinecap="round" />
       </svg>
     ),
+    label: "Address",
     text: "3501 Sheffield Manor Terrace, Silver Spring, MD 20904",
+    href: "https://maps.google.com/?q=3501+Sheffield+Manor+Terrace+Silver+Spring+MD+20904",
   },
 ];
 

@@ -19,14 +19,14 @@ const contactInfo = [
   {
     icon: <Phone size={15} strokeWidth={1.8} color={PINK} />,
     label: "Phone",
-    text: "1 443-900-3895",
+    text: "+1 (443) 900-3895",
     href: "tel:+14439003895",
   },
   {
     icon: <Smartphone size={15} strokeWidth={1.8} color="#9ca3af" />,
     label: "Fax",
-    text: "1 410-834-7514",
-    href: "tel:+14108347514",
+    text: "+1 (410) 834-7514",
+    href: null, // better: avoid clickable fax (not widely supported)
   },
   {
     icon: <Mail size={15} strokeWidth={1.8} color={PINK} />,
@@ -38,7 +38,7 @@ const contactInfo = [
     icon: <MapPin size={15} strokeWidth={1.8} color={PINK} />,
     label: "Address",
     text: "3501 Sheffield Manor Terrace\nSilver Spring, MD 20904",
-    href: null,
+    href: "https://maps.google.com/?q=3501+Sheffield+Manor+Terrace+Silver+Spring+MD+20904",
   },
 ];
 
