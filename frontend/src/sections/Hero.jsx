@@ -67,7 +67,7 @@ const DOTS = [
 
 function SpectrumBar() {
   return (
-    <div className="flex gap-1 items-end h-8 mt-6">
+    <div className="flex gap-1.5 items-end h-8 mt-5">
       {[COLORS.pink, COLORS.magenta, COLORS.orange, COLORS.yellow, COLORS.green].map((c, i) => (
         <motion.div
           key={c}
@@ -128,7 +128,7 @@ function ContactForm() {
 
   return (
     <motion.div
-      className="relative rounded-3xl shadow-2xl overflow-hidden w-full"
+      className="relative rounded-2xl shadow-2xl overflow-hidden w-full"
       style={{ background: COLORS.pink }}
       initial={{ opacity: 0, y: 32, scale: 0.93 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -139,8 +139,7 @@ function ContactForm() {
         className="absolute top-0 left-0 right-0 pointer-events-none"
         style={{
           height: "38%",
-          background:
-            "linear-gradient(180deg, rgba(255,255,255,0.13) 0%, rgba(255,255,255,0.0) 100%)",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.13) 0%, rgba(255,255,255,0.0) 100%)",
           borderRadius: "inherit",
           zIndex: 1,
         }}
@@ -161,28 +160,28 @@ function ContactForm() {
       />
 
       {/* Content */}
-      <div className="relative z-10 p-6 md:p-9">
+      <div className="relative z-10 p-5 sm:p-6 md:p-8 lg:p-9">
         {/* Heading */}
         <motion.div
-          className="mb-6"
+          className="mb-5"
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.15 }}
         >
           <h2
-            className="text-xl md:text-2xl font-bold text-white mb-1"
+            className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1"
             style={{ letterSpacing: "-0.02em", fontFamily: "'Inter', sans-serif" }}
           >
             Get in Touch
           </h2>
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.72)", fontFamily: "'Inter', sans-serif" }}>
+          <p className="text-xs sm:text-sm" style={{ color: "rgba(255,255,255,0.72)", fontFamily: "'Inter', sans-serif" }}>
             Our care team typically responds within one business day.
           </p>
         </motion.div>
 
         {success ? (
           <motion.div
-            className="flex flex-col items-center justify-center py-12 gap-4"
+            className="flex flex-col items-center justify-center py-10 sm:py-12 gap-4"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, ease: "backOut" }}
@@ -211,7 +210,7 @@ function ContactForm() {
             </button>
           </motion.div>
         ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:gap-4">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.25 }}>
               <input
                 type="text"
@@ -256,7 +255,7 @@ function ContactForm() {
                 value={formData.message}
                 onChange={handleChange}
                 placeholder="How can we help? Tell us about your child…"
-                rows={4}
+                rows={3}
                 required
                 className={inputClass}
                 style={{ resize: "none", fontFamily: "'Inter', sans-serif" }}
@@ -309,7 +308,7 @@ function ContactForm() {
             </motion.button>
 
             <motion.p
-              className="text-center text-xs mt-1"
+              className="text-center text-xs mt-0.5"
               style={{ color: "rgba(255,255,255,0.55)", fontFamily: "'Inter', sans-serif" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -349,14 +348,24 @@ export default function AutismHero() {
   return (
     <section
       ref={heroRef}
-      className="relative md:min-h-screen flex flex-col justify-center overflow-hidden bg-[#FAFAF8]"
-      style={{ fontFamily: "'Inter', sans-serif" }}
+      className="relative flex flex-col justify-center overflow-hidden bg-[#FAFAF8]"
+      style={{ fontFamily: "'Inter', sans-serif", minHeight: "100svh" }}
     >
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');`}</style>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-      {/* Dot constellation background */}
+        /* Mobile-first scroll support */
+        @media (max-width: 767px) {
+          .hero-scroll-section {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+          }
+        }
+      `}</style>
+
+      {/* Dot constellation background — hidden on very small screens to reduce noise */}
       <svg
-        className="absolute inset-0 w-full"
+        className="absolute inset-0 w-full hidden sm:block"
         style={{ height: 220, top: 0, opacity: 0.7 }}
         viewBox="0 0 1280 200"
         preserveAspectRatio="xMidYMid slice"
@@ -371,21 +380,94 @@ export default function AutismHero() {
         ))}
       </svg>
 
+      {/* Simplified dots on mobile */}
+      <svg
+        className="absolute inset-0 w-full block sm:hidden"
+        style={{ height: 120, top: 0, opacity: 0.5 }}
+        viewBox="0 0 400 120"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        {DOTS.slice(0, 7).map((d, i) => (
+          <Dot key={i} x={(d.x / 1280) * 400} y={(d.y / 200) * 120} color={d.color} size={d.size * 0.8} delay={d.delay} />
+        ))}
+      </svg>
+
       {/* Blobs */}
       <motion.div style={{ x: blobX, y: blobY }} className="absolute inset-0 pointer-events-none">
-        <Blob color={COLORS.pink} delay={0} style={{ width: 420, height: 360, top: "10%", right: "5%" }} />
-        <Blob color={COLORS.green} delay={2} style={{ width: 300, height: 280, bottom: "12%", left: "2%" }} />
-        <Blob color={COLORS.orange} delay={4} style={{ width: 220, height: 200, top: "55%", right: "18%" }} />
-        <Blob color={COLORS.yellow} delay={1.5} style={{ width: 180, height: 160, top: "30%", left: "25%" }} />
+        {/* Mobile: smaller blobs, repositioned */}
+        <Blob
+          color={COLORS.pink}
+          delay={0}
+          style={{
+            width: "min(420px, 90vw)",
+            height: "min(360px, 80vw)",
+            top: "5%",
+            right: "-10%",
+          }}
+        />
+        <Blob
+          color={COLORS.green}
+          delay={2}
+          style={{
+            width: "min(300px, 65vw)",
+            height: "min(280px, 60vw)",
+            bottom: "5%",
+            left: "-8%",
+          }}
+        />
+        <Blob
+          color={COLORS.orange}
+          delay={4}
+          style={{
+            width: "min(220px, 50vw)",
+            height: "min(200px, 45vw)",
+            top: "55%",
+            right: "10%",
+          }}
+        />
+        <Blob
+          color={COLORS.yellow}
+          delay={1.5}
+          style={{
+            width: "min(180px, 40vw)",
+            height: "min(160px, 36vw)",
+            top: "30%",
+            left: "20%",
+          }}
+        />
       </motion.div>
 
       {/* Main content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 pt-10 md:pt-0 pb-0 w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-16 md:items-stretch">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-10 sm:py-12 md:py-0 grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 md:gap-16 md:items-center md:min-h-screen">
 
         {/* Left: text */}
-        <div className="text-center md:text-left flex flex-col justify-center py-16 md:py-20">
+        <div className="text-center md:text-left flex flex-col justify-center md:py-20">
+          {/* Eyebrow tag — mobile bonus visual anchor */}
+          <motion.div
+            className="flex items-center justify-center md:justify-start gap-2 mb-4"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.5 }}
+          >
+            <span
+              className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full"
+              style={{
+                background: `${COLORS.pink}18`,
+                color: COLORS.pink,
+                letterSpacing: "0.06em",
+                fontFamily: "'Inter', sans-serif",
+              }}
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ background: COLORS.pink }}
+              />
+              Autism Support & Therapy
+            </span>
+          </motion.div>
+
           <motion.h1
-            className="text-4xl md:text-6xl lg:text-8xl leading-[1.08] text-gray-900 mb-5"
+            className="text-[2.4rem] xs:text-5xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-[1.06] text-gray-900 mb-4 sm:mb-5"
             style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, letterSpacing: "-0.03em" }}
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -405,7 +487,7 @@ export default function AutismHero() {
           </motion.h1>
 
           <motion.p
-            className="text-base md:text-lg text-gray-500 leading-relaxed mx-auto md:mx-0 max-w-md mb-2"
+            className="text-sm sm:text-base md:text-lg text-gray-500 leading-relaxed mx-auto md:mx-0 max-w-sm sm:max-w-md mb-2"
             style={{ fontFamily: "'Inter', sans-serif" }}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -419,14 +501,14 @@ export default function AutismHero() {
           </div>
 
           <motion.div
-            className="flex flex-wrap gap-3 mt-8 justify-center md:justify-start"
+            className="flex flex-wrap gap-3 mt-6 sm:mt-8 justify-center md:justify-start"
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.85, duration: 0.5 }}
           >
             <motion.a
               href="/contact-us"
-              className="px-7 py-3.5 rounded-full text-white font-semibold text-[15px] no-underline"
+              className="px-6 sm:px-7 py-3 sm:py-3.5 rounded-full text-white font-semibold text-sm sm:text-[15px] no-underline"
               style={{ background: COLORS.green, fontFamily: "'Inter', sans-serif" }}
               whileHover={{ scale: 1.04, backgroundColor: "#243a0b" }}
               whileTap={{ scale: 0.97 }}
@@ -435,7 +517,7 @@ export default function AutismHero() {
             </motion.a>
             <motion.a
               href="/about-us"
-              className="px-7 py-3.5 rounded-full font-semibold text-[15px] border border-gray-200 bg-white text-gray-700 no-underline"
+              className="px-6 sm:px-7 py-3 sm:py-3.5 rounded-full font-semibold text-sm sm:text-[15px] border border-gray-200 bg-white text-gray-700 no-underline"
               style={{ fontFamily: "'Inter', sans-serif" }}
               whileHover={{ scale: 1.03, borderColor: COLORS.green }}
               whileTap={{ scale: 0.97 }}
@@ -443,10 +525,32 @@ export default function AutismHero() {
               Know More
             </motion.a>
           </motion.div>
+
+          {/* Trust signals — mobile only below buttons */}
+          {/* <motion.div
+            className="flex items-center justify-center md:justify-start gap-4 mt-5 md:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.1 }}
+          >
+            {[
+              { icon: "🏅", label: "Certified Therapists" },
+              { icon: "💚", label: "1000+ Families" },
+            ].map(({ icon, label }) => (
+              <span
+                key={label}
+                className="flex items-center gap-1.5 text-xs text-gray-500"
+                style={{ fontFamily: "'Inter', sans-serif" }}
+              >
+                <span>{icon}</span>
+                {label}
+              </span>
+            ))}
+          </motion.div> */}
         </div>
 
         {/* Right: Contact Form */}
-        <div className="flex flex-col justify-center py-8 md:py-16 mt-6 md:mt-0">
+        <div className="flex flex-col justify-center md:py-16">
           <ContactForm />
         </div>
       </div>

@@ -8,11 +8,11 @@ const app = express();
 // ✅ CORS (clean)
 app.use(cors({
   origin: [
-    "https://alliancebehavioraltherapysolutions.netlify.app",
-    "https://alliancebehavioraltherapysolutions.com",
-    "https://www.alliancebehavioraltherapysolutions.com",
-    "https://alliancebehavioraltherapysolutions.net",
-    "https://www.alliancebehavioraltherapysolutions.net"
+    "https://bpautism.netlify.app",
+    "https://bpautism.com",
+    "https://www.bpautism.com",
+    "http://localhost:5173"
+   
   ],
   methods: ["GET", "POST"],
   credentials: true
