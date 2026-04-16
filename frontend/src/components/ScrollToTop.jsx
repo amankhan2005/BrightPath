@@ -9,15 +9,42 @@ import { motion, AnimatePresence } from "framer-motion";
 // ── Design tokens (Aligned with BrightPath Premium Theme) ─────────────────
 const T = {
   bg:      "#FAFAF8",
-  surface: "#fff0f3", // Light pink tint
-  primary: "#E8194B", // Hot Pink
-  accent:  "#ff6b8a", // Soft Pink
-  dark:    "#111111", // Near Black
-  text:    "#374151", // Gray 700
-  muted:   "#9ca3af", // Gray 400
-  border:  "#f0eff0", // Soft Border
+  surface: "#fff0f3",
+  primary: "#E8194B",
+  accent:  "#ff6b8a",
+  dark:    "#111111",
+  text:    "#374151",
+  muted:   "#9ca3af",
+  border:  "#f0eff0",
   white:   "#FFFFFF",
 };
+
+// ── Inject smooth-scrollbar styles once ──────────────────────────────────
+if (typeof document !== "undefined" && !document.getElementById("bp-chat-scrollbar-style")) {
+  const tag = document.createElement("style");
+  tag.id = "bp-chat-scrollbar-style";
+  tag.textContent = `
+    .bp-messages-scroll {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(232,25,75,0.25) transparent;
+    }
+    .bp-messages-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .bp-messages-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .bp-messages-scroll::-webkit-scrollbar-thumb {
+      background: rgba(232,25,75,0.22);
+      border-radius: 999px;
+      transition: background 0.2s;
+    }
+    .bp-messages-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(232,25,75,0.4);
+    }
+  `;
+  document.head.appendChild(tag);
+}
 
 // ── Responsive hook ───────────────────────────────────────────────────────────
 function useIsMobile() {
@@ -46,14 +73,6 @@ const ChatIcon = ({ size = 16, color = T.primary }) => (
     stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
     aria-hidden="true">
     <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-  </svg>
-);
-
-const PhoneIcon = ({ size = 14, color = T.white }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
-    stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
-    aria-hidden="true">
-    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.01 1.18 2 2 0 012 .01h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/>
   </svg>
 );
 
@@ -86,7 +105,7 @@ const ArrowIcon = ({ size = 11, color = T.white }) => (
 // ── Reply content (BrightPath Autism Branded) ──────────────────────────────
 const REPLIES = {
   services: {
-    text: `At BrightPath Autism, we provide compassionate ABA therapy services designed to support your child's growth and development.\n\nOur services include:\n• Communication & Language Development\n• Social Interaction Skills\n• Behavior Management\n• Play & Learning Skills\n\nEach therapy plan is personalized based on your child’s unique needs, helping them build confidence, communication, and independence.`,
+    text: `At BrightPath Autism, we provide compassionate ABA therapy services designed to support your child's growth and development.\n\nOur services include:\n• Communication & Language Development\n• Social Interaction Skills\n• Behavior Management\n• Play & Learning Skills\n\nEach therapy plan is personalized based on your child's unique needs, helping them build confidence, communication, and independence.`,
     showContactBtn: true,
   },
   about: {
@@ -114,7 +133,7 @@ const REPLIES = {
     showContactBtn: true,
   },
   cost: {
-    text: `The cost of therapy depends on your child’s needs and insurance coverage.\n\nWe provide clear guidance and support so you understand everything before starting.`,
+    text: `The cost of therapy depends on your child's needs and insurance coverage.\n\nWe provide clear guidance and support so you understand everything before starting.`,
     showContactBtn: true,
   },
   location: {
@@ -122,7 +141,7 @@ const REPLIES = {
     showContactBtn: false,
   },
   default: {
-    text: `I'm here to help you with our services, getting started, or any questions about your child’s care at BrightPath Autism.\n\nHow can I assist you today?`,
+    text: `I'm here to help you with our services, getting started, or any questions about your child's care at BrightPath Autism.\n\nHow can I assist you today?`,
     showContactBtn: false,
   },
 };
@@ -241,12 +260,12 @@ const Message = ({ msg, isMobile }) => {
           <ChatIcon size={12} color={T.primary} />
         </div>
       )}
-      <div style={{ 
-        display: "flex", 
-        flexDirection: "column", 
-        gap: "0.5rem", 
-        maxWidth: "85%", 
-        overflowWrap: "break-word" 
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.5rem",
+        maxWidth: "85%",
+        overflowWrap: "break-word",
       }}>
         <div style={msg.sender === "user" ? s.bubble.user : s.bubble.bot}>
           {msg.text}
@@ -375,8 +394,13 @@ export default function FloatingAIChat() {
 
             <div style={s.divider} />
 
-            {/* Messages */}
-            <div style={s.messages} role="log" aria-live="polite">
+            {/* Messages — fixed-height scrollable area */}
+            <div
+              className="bp-messages-scroll"
+              style={s.messages}
+              role="log"
+              aria-live="polite"
+            >
               {messages.map((msg, i) => (
                 <Message key={i} msg={msg} isMobile={isMobile} />
               ))}
@@ -408,8 +432,6 @@ export default function FloatingAIChat() {
                 <SendIcon size={15} />
               </motion.button>
             </div>
-
-      
           </motion.div>
         )}
       </AnimatePresence>
@@ -438,17 +460,19 @@ export default function FloatingAIChat() {
 
 // ── Responsive styles factory ─────────────────────────────────────────────────
 function makeStyles(isMobile) {
-  const touchTarget = "2.75rem"; // 44px
-  
+  const touchTarget = "2.75rem";
+
   return {
+    /* ───── Card: FIXED height, never grows ───── */
     card: {
       position: "fixed",
       right: isMobile ? "0.75rem" : "1.5rem",
-      top: isMobile ? "auto" : "20%", 
+      top: isMobile ? "auto" : "40%",
       bottom: isMobile ? "5.5rem" : "auto",
       transform: isMobile ? "none" : "translateY(-50%)",
       width: "min(92vw, 22rem)",
-      maxHeight: isMobile ? "85vh" : "80vh",
+      /* ★ FIXED height — the card will never expand beyond this */
+      height: isMobile ? "70vh" : "32rem",
       zIndex: 9999,
       background: T.white,
       borderRadius: isMobile ? "1.125rem" : "1.375rem",
@@ -456,7 +480,7 @@ function makeStyles(isMobile) {
       boxShadow: `0 0.75rem 2.5rem rgba(232, 25, 75, 0.08), 0 0.125rem 0.625rem rgba(0,0,0,0.04)`,
       display: "flex",
       flexDirection: "column",
-      overflow: "hidden",
+      overflow: "hidden",          /* ★ prevents any child from pushing card taller */
       fontFamily: "'Inter', sans-serif",
     },
 
@@ -466,7 +490,7 @@ function makeStyles(isMobile) {
       display: "flex",
       alignItems: "center",
       gap: "0.625rem",
-      flexShrink: 0,
+      flexShrink: 0,               /* ★ never shrinks */
     },
 
     headerAvatar: {
@@ -531,6 +555,7 @@ function makeStyles(isMobile) {
       gap: "0.375rem",
       flexWrap: "wrap",
       overflow: "hidden",
+      flexShrink: 0,               /* ★ never shrinks */
     },
 
     chip: {
@@ -554,20 +579,19 @@ function makeStyles(isMobile) {
       background: T.border,
       margin: isMobile ? "0.5rem 0 0" : "0.625rem 0 0",
       opacity: 0.6,
-      flexShrink: 0,
+      flexShrink: 0,               /* ★ never shrinks */
     },
 
+    /* ───── Messages: the ONLY scrollable area ───── */
     messages: {
       padding: isMobile ? "0.625rem" : "0.875rem",
       display: "flex",
       flexDirection: "column",
       gap: isMobile ? "0.625rem" : "0.75rem",
-      flex: 1,
-      minHeight: 0,
-      overflowY: "auto",
+      flex: 1,                      /* ★ takes all remaining space */
+      minHeight: 0,                 /* ★ critical: allows flex child to shrink below content size */
+      overflowY: "auto",            /* ★ scrolls when messages overflow */
       scrollBehavior: "smooth",
-      scrollbarWidth: "thin",
-      scrollbarColor: `${T.border} transparent`,
       WebkitOverflowScrolling: "touch",
     },
 
@@ -588,7 +612,7 @@ function makeStyles(isMobile) {
       bot: {
         padding: isMobile ? "0.625rem 0.75rem" : "0.75rem 0.875rem",
         borderRadius: "1rem 1rem 1rem 0.25rem",
-        background: "#f9fafb", // Tailwind gray-50 for soft contrast
+        background: "#f9fafb",
         color: T.text,
         fontSize: isMobile ? "0.875rem" : "0.9375rem",
         lineHeight: 1.6,
@@ -637,7 +661,7 @@ function makeStyles(isMobile) {
       display: "flex",
       gap: "0.5rem",
       alignItems: "center",
-      flexShrink: 0,
+      flexShrink: 0,               /* ★ never shrinks */
     },
 
     input: {
@@ -647,7 +671,7 @@ function makeStyles(isMobile) {
       borderRadius: "999px",
       border: `1.5px solid ${T.border}`,
       fontFamily: "'Inter', sans-serif",
-      fontSize: "1rem", // 16px to prevent iOS zoom
+      fontSize: "1rem",            /* 16px to prevent iOS zoom */
       color: T.text,
       background: T.bg,
       outline: "none",
@@ -668,34 +692,6 @@ function makeStyles(isMobile) {
       flexShrink: 0,
       outline: "none",
       boxShadow: "0 0.1875rem 0.625rem rgba(232, 25, 75, 0.25)",
-      WebkitTapHighlightColor: "transparent",
-    },
-
-    ctaWrap: {
-      padding: isMobile ? "0.5rem 0.625rem 0.75rem" : "0.625rem 0.75rem 0.875rem",
-      borderTop: `1px solid ${T.border}`,
-      flexShrink: 0,
-    },
-
-    ctaBtn: {
-      width: "100%",
-      padding: "0.875rem 0",
-      borderRadius: "999px",
-      border: "none",
-      background: T.primary,
-      color: T.white,
-      fontFamily: "'Inter', sans-serif",
-      fontSize: "0.875rem",
-      fontWeight: 700,
-      letterSpacing: "0.025em",
-      cursor: "pointer",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: "0.5rem",
-      boxShadow: "0 0.3125rem 1.125rem rgba(232, 25, 75, 0.3)",
-      outline: "none",
-      textDecoration: "none",
       WebkitTapHighlightColor: "transparent",
     },
 

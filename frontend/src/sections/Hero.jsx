@@ -441,113 +441,96 @@ export default function AutismHero() {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-10 sm:py-12 md:py-0 grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 md:gap-16 md:items-center md:min-h-screen">
 
         {/* Left: text */}
-        <div className="text-center md:text-left flex flex-col justify-center md:py-20">
-          {/* Eyebrow tag — mobile bonus visual anchor */}
-          <motion.div
-            className="flex items-center justify-center md:justify-start gap-2 mb-4"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, duration: 0.5 }}
-          >
-            <span
-              className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full"
-              style={{
-                background: `${COLORS.pink}18`,
-                color: COLORS.pink,
-                letterSpacing: "0.06em",
-                fontFamily: "'Inter', sans-serif",
-              }}
-            >
-              <span
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ background: COLORS.pink }}
-              />
-              Autism Support & Therapy
-            </span>
-          </motion.div>
+       <div className="text-center md:text-left flex flex-col justify-center md:py-20">
+  {/* Eyebrow tag */}
+  <motion.div
+    className="flex items-center justify-center md:justify-start gap-2 mb-4"
+    initial={{ opacity: 0, y: -10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.25, duration: 0.5 }}
+  >
+    <span
+      className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full"
+      style={{
+        background: `${COLORS.pink}18`,
+        color: COLORS.pink,
+        letterSpacing: "0.06em",
+        fontFamily: "'Inter', sans-serif",
+      }}
+    >
+      <span
+        className="w-1.5 h-1.5 rounded-full"
+        style={{ background: COLORS.pink }}
+      />
+      Autism Support & Therapy
+    </span>
+  </motion.div>
 
-          <motion.h1
-            className="text-[2.4rem] xs:text-5xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-[1.06] text-gray-900 mb-4 sm:mb-5"
-            style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, letterSpacing: "-0.03em" }}
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-          >
-            You belong{" "}
-            <span
-              style={{
-                fontStyle: "italic",
-                fontWeight: 600,
-                color: COLORS.pink,
-              }}
-            >
-              exactly
-            </span>{" "}
-            as you are.
-          </motion.h1>
+  {/* ✅ UPDATED HEADLINE */}
+  <motion.h1
+    className="text-[2.4rem] xs:text-5xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-[1.06] text-gray-900 mb-4 sm:mb-5"
+    style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, letterSpacing: "-0.03em" }}
+    initial={{ opacity: 0, y: 24 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.45, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+  >
+    Building{" "}
+    <span
+      style={{
+        fontStyle: "italic",
+        fontWeight: 600,
+        color: COLORS.pink,
+      }}
+    >
+      bridges
+    </span>{" "}
+    to your child’s potential.
+  </motion.h1>
 
-          <motion.p
-            className="text-sm sm:text-base md:text-lg text-gray-500 leading-relaxed mx-auto md:mx-0 max-w-sm sm:max-w-md mb-2"
-            style={{ fontFamily: "'Inter', sans-serif" }}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.65, duration: 0.55 }}
-          >
-            BrightPath Autism helps children build confidence, communication, and independence through compassionate, individualized care.
-          </motion.p>
+  {/* ✅ UPDATED SUBHEADING */}
+  <motion.p
+    className="text-sm sm:text-base md:text-lg text-gray-500 leading-relaxed mx-auto md:mx-0 max-w-sm sm:max-w-md mb-2"
+    style={{ fontFamily: "'Inter', sans-serif" }}
+    initial={{ opacity: 0, y: 16 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.65, duration: 0.55 }}
+  >
+    Personalized autism therapy that helps your child grow in confidence,
+    communication, and independence—one small victory at a time.
+  </motion.p>
 
-          <div className="flex justify-center md:justify-start">
-            <SpectrumBar />
-          </div>
+  <div className="flex justify-center md:justify-start">
+    <SpectrumBar />
+  </div>
 
-          <motion.div
-            className="flex flex-wrap gap-3 mt-6 sm:mt-8 justify-center md:justify-start"
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.85, duration: 0.5 }}
-          >
-            <motion.a
-              href="/contact-us"
-              className="px-6 sm:px-7 py-3 sm:py-3.5 rounded-full text-white font-semibold text-sm sm:text-[15px] no-underline"
-              style={{ background: COLORS.green, fontFamily: "'Inter', sans-serif" }}
-              whileHover={{ scale: 1.04, backgroundColor: "#243a0b" }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Get Support →
-            </motion.a>
-            <motion.a
-              href="/about-us"
-              className="px-6 sm:px-7 py-3 sm:py-3.5 rounded-full font-semibold text-sm sm:text-[15px] border border-gray-200 bg-white text-gray-700 no-underline"
-              style={{ fontFamily: "'Inter', sans-serif" }}
-              whileHover={{ scale: 1.03, borderColor: COLORS.green }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Know More
-            </motion.a>
-          </motion.div>
+  {/* ✅ UPDATED CTA */}
+  <motion.div
+    className="flex flex-wrap gap-3 mt-6 sm:mt-8 justify-center md:justify-start"
+    initial={{ opacity: 0, y: 14 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.85, duration: 0.5 }}
+  >
+    <motion.a
+      href="/contact-us"
+      className="px-6 sm:px-7 py-3 sm:py-3.5 rounded-full text-white font-semibold text-sm sm:text-[15px] no-underline"
+      style={{ background: COLORS.green, fontFamily: "'Inter', sans-serif" }}
+      whileHover={{ scale: 1.04, backgroundColor: "#243a0b" }}
+      whileTap={{ scale: 0.97 }}
+    >
+      Get Started →
+    </motion.a>
 
-          {/* Trust signals — mobile only below buttons */}
-          {/* <motion.div
-            className="flex items-center justify-center md:justify-start gap-4 mt-5 md:hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.1 }}
-          >
-            {[
-              { icon: "🏅", label: "Certified Therapists" },
-              { icon: "💚", label: "1000+ Families" },
-            ].map(({ icon, label }) => (
-              <span
-                key={label}
-                className="flex items-center gap-1.5 text-xs text-gray-500"
-                style={{ fontFamily: "'Inter', sans-serif" }}
-              >
-                <span>{icon}</span>
-                {label}
-              </span>
-            ))}
-          </motion.div> */}
-        </div>
+    <motion.a
+      href="/about-us"
+      className="px-6 sm:px-7 py-3 sm:py-3.5 rounded-full font-semibold text-sm sm:text-[15px] border border-gray-200 bg-white text-gray-700 no-underline"
+      style={{ fontFamily: "'Inter', sans-serif" }}
+      whileHover={{ scale: 1.03, borderColor: COLORS.green }}
+      whileTap={{ scale: 0.97 }}
+    >
+      Learn More
+    </motion.a>
+  </motion.div>
+</div>
 
         {/* Right: Contact Form */}
         <div className="flex flex-col justify-center md:py-16">
