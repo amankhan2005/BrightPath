@@ -26,40 +26,70 @@ const font = {
 };
 
 // ─── Shared Partials ─────────────────────────────────────────────────────────
-const emailWrapper = (content) => `
+
+/**
+ * Outer wrapper — now includes:
+ * - Preheader text (inbox preview snippet)
+ * - xmlns for Outlook VML support
+ * - Text-size-adjust for mobile scaling fix
+ * - Background color on outer table (not just body) for Yahoo Mail
+ */
+const emailWrapper = (content, preheader = "") => `
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>${COMPANY}</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
 </head>
-<body style="margin:0;padding:0;background-color:${color.bgOuter};font-family:${font.sans};">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+<body style="margin:0;padding:0;background-color:${color.bgOuter};font-family:${font.sans};-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+  ${preheader ? `
+  <div style="display:none!important;visibility:hidden;mso-hide:all;font-size:1px;line-height:1px;color:${color.bgOuter};max-height:0;max-width:0;opacity:0;overflow:hidden;">
+    ${preheader}
+  </div>` : ""}
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${color.bgOuter};">
     <tr>
-      <td align="center" style="padding:40px 16px;">
+      <td align="center" style="padding:48px 16px 40px;">
         ${content}
       </td>
     </tr>
   </table>
 </body>
-</html>
-`;
+</html>`;
 
+/**
+ * Card container — now includes:
+ * - `width="560"` attribute (Outlook ignores max-width but respects width)
+ * - Refined dual-layer shadow (tight base + wide brand tint)
+ */
 const emailCard = (header, body, footer = "") => `
-<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"
-  style="max-width:560px;margin:0 auto;background:${color.white};border-radius:16px;
-         overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,0.05), 0 20px 40px rgba(200,20,61,0.08);">
+<table role="presentation" width="560" cellspacing="0" cellpadding="0" border="0"
+  style="max-width:560px;width:100%;margin:0 auto;background:${color.white};border-radius:16px;
+         overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(200,20,61,0.07);">
   ${header}
   ${body}
   ${footer}
-</table>
-`;
+</table>`;
 
+/**
+ * Header — now includes:
+ * - `background-color` fallback (Outlook strips background-image gradients)
+ * - Subtitle wrapped in flanking divider lines for visual containment
+ */
 const emailHeader = (title, subtitle = "") => `
 <tr>
-  <td style="background:${gradient.header};padding:36px 40px;text-align:center;">
-    <p style="margin:0 0 4px;font-family:${font.sans};font-size:11px;font-weight:700;
+  <td style="background-color:${color.primaryDark};background-image:${gradient.header};padding:40px 40px 36px;text-align:center;">
+    <p style="margin:0 0 6px;font-family:${font.sans};font-size:11px;font-weight:700;
               letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.7);">
       ${COMPANY}
     </p>
@@ -67,38 +97,128 @@ const emailHeader = (title, subtitle = "") => `
                color:${color.white};letter-spacing:0.3px;line-height:1.3;">
       ${title}
     </h1>
-    ${subtitle ? `<p style="margin:10px 0 0;font-size:13px;color:rgba(255,255,255,0.8);letter-spacing:0.5px;">${subtitle}</p>` : ""}
+    ${subtitle ? `
+    <table role="presentation" cellspacing="0" cellpadding="0" align="center" style="margin:16px auto 0;">
+      <tr>
+        <td style="height:1px;width:40px;background:rgba(255,255,255,0.25);"></td>
+        <td style="padding:0 14px;">
+          <span style="font-size:13px;color:rgba(255,255,255,0.8);letter-spacing:0.5px;">${subtitle}</span>
+        </td>
+        <td style="height:1px;width:40px;background:rgba(255,255,255,0.25);"></td>
+      </tr>
+    </table>` : ""}
   </td>
-</tr>
-`;
+</tr>`;
 
-const emailFooter = () => `
+/**
+ * Footer — now includes:
+ * - Optional unsubscribe link (CAN-SPAM compliance)
+ * - Smart URL display (shows domain or fallback text)
+ */
+const emailFooter = ({ unsubUrl = "" } = {}) => `
 <tr>
-  <td style="padding:20px 40px;border-top:1px solid ${color.border};text-align:center;">
-    <p style="margin:0;font-size:12px;color:${color.textLight};line-height:1.6;">
-      © ${new Date().getFullYear()} ${COMPANY}. All rights reserved.<br/>
-      <a href="${WEBSITE}" style="color:${color.primary};text-decoration:none;">Visit our website</a>
+  <td style="padding:24px 40px;border-top:1px solid ${color.border};text-align:center;">
+    <p style="margin:0 0 4px;font-size:12px;color:${color.textLight};line-height:1.6;">
+      © ${new Date().getFullYear()} ${COMPANY}. All rights reserved.
+    </p>
+    <p style="margin:0;font-size:12px;line-height:1.6;">
+      <a href="${WEBSITE}" style="color:${color.primary};text-decoration:none;">${WEBSITE === "#" ? "Visit our website" : WEBSITE.replace(/^https?:\/\//, "")}</a>
+      ${unsubUrl ? `&nbsp;&nbsp;·&nbsp;&nbsp;<a href="${unsubUrl}" style="color:${color.textLight};text-decoration:underline;">Unsubscribe</a>` : ""}
     </p>
   </td>
-</tr>
-`;
+</tr>`;
 
-// ─── User Career Application Confirmation ────────────────────────────────────
-export const userCareerTemplate = ({ name, role }) => {
-  const steps = ["Application received &amp; under review", "Shortlisting of candidates", "Interview scheduling &amp; coordination"];
+// ─── Reusable Components ─────────────────────────────────────────────────────
 
-  const stepsHtml = steps
-    .map(
-      (step, i) => `
+/** Horizontal divider with configurable top spacing */
+const emailDivider = (top = 24) => `
+<tr>
+  <td style="padding:${top}px 40px 0;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+      <tr><td style="height:1px;background:${color.border};"></td></tr>
+    </table>
+  </td>
+</tr>`;
+
+/** CTA button — gradient primary or outlined secondary */
+const emailButton = (text, href, variant = "primary") => {
+  const isPrimary = variant === "primary";
+  const bg = isPrimary
+    ? `background-color:${color.primaryDark};background-image:${gradient.header};`
+    : `background-color:${color.white};border:1px solid ${color.border};`;
+  const txt = isPrimary ? `color:${color.white};` : `color:${color.text};`;
+  const shadow = isPrimary ? `box-shadow:0 2px 8px rgba(200,20,61,0.2);` : "";
+
+  return `
+  <table role="presentation" cellspacing="0" cellpadding="0">
     <tr>
-      <td style="padding:10px 0;border-bottom:${i < steps.length - 1 ? `1px solid ${color.border}` : "none"};">
+      <td style="border-radius:999px;${bg}${shadow}">
+        <a href="${href}"
+           style="display:inline-block;padding:13px 28px;font-size:13px;font-weight:600;
+                  ${txt}text-decoration:none;letter-spacing:0.3px;font-family:${font.sans};">
+          ${text}
+        </a>
+      </td>
+    </tr>
+  </table>`;
+};
+
+/** Left-bordered callout — "action" (red accent) or "info" (subtle) */
+const emailCallout = (text, type = "info") => {
+  const isAction = type === "action";
+  const box = isAction
+    ? `background:${color.primaryLight};border-left:4px solid ${color.primary};`
+    : `background:${gradient.subtle};background-color:${color.primaryLight};border-left:4px solid ${color.border};`;
+  const txt = isAction
+    ? `color:${color.primaryDark};font-weight:600;`
+    : `color:${color.textMuted};`;
+
+  return `
+  <div style="${box}border-radius:0 8px 8px 0;padding:14px 18px;">
+    <p style="margin:0;font-size:13px;line-height:1.6;${txt}">${text}</p>
+  </div>`;
+};
+
+/** Data fields container — replaces the padding-hack table */
+const dataCard = (content) => `
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0"
+  style="background:${color.bgOuter};border-radius:12px;border:1px solid ${color.border};">
+  <tr><td style="padding:8px 20px;">${content}</td></tr>
+</table>`;
+
+/** Numbered steps container */
+const stepsCard = (label, stepsHtml) => `
+<div style="background:${gradient.subtle};background-color:${color.primaryLight};border-radius:12px;
+            padding:24px;margin-bottom:24px;border:1px solid ${color.border};">
+  <p style="margin:0 0 16px;font-size:11px;font-weight:700;letter-spacing:2px;
+            text-transform:uppercase;color:${color.primary};">${label}</p>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+    ${stepsHtml}
+  </table>
+</div>`;
+
+// ─── Builders ────────────────────────────────────────────────────────────────
+
+const buildSteps = (steps) =>
+  steps
+    .map((step, i) => {
+      const isLast = i === steps.length - 1;
+      return `
+    <tr>
+      <td style="padding:12px 0;${!isLast ? `border-bottom:1px solid ${color.border};` : ""}">
         <table role="presentation" cellspacing="0" cellpadding="0" width="100%">
           <tr>
-            <td width="32" valign="middle" style="padding-right:14px;">
-              <div style="width:28px;height:28px;border-radius:50%;background:${gradient.header};
-                          text-align:center;line-height:28px;font-size:12px;font-weight:700;color:white;">
-                ${i + 1}
-              </div>
+            <td width="36" valign="middle" style="padding-right:16px;">
+              <table role="presentation" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="width:28px;height:28px;border-radius:50%;
+                              background-color:${color.primaryDark};background-image:${gradient.header};
+                              text-align:center;vertical-align:middle;
+                              font-size:12px;font-weight:700;color:white;line-height:28px;">
+                    ${i + 1}
+                  </td>
+                </tr>
+              </table>
             </td>
             <td style="font-size:14px;color:${color.text};font-family:${font.sans};line-height:1.5;">
               ${step}
@@ -106,87 +226,24 @@ export const userCareerTemplate = ({ name, role }) => {
           </tr>
         </table>
       </td>
-    </tr>`
-    )
+    </tr>`;
+    })
     .join("");
 
-  const body = `
-  <tr>
-    <td style="padding:40px 40px 32px;">
-      <p style="margin:0 0 6px;font-size:20px;font-family:${font.base};color:${color.text};font-weight:400;">
-        Dear ${name},
-      </p>
-      <p style="margin:0 0 24px;font-size:14px;color:${color.textMuted};line-height:1.7;">
-        Thank you for your interest in the <strong style="color:${color.text};font-weight:600;">${role}</strong>
-        position at ${COMPANY}. We have received your application and are pleased to confirm receipt.
-      </p>
-
-      <div style="background:${gradient.subtle};border-radius:12px;padding:24px;margin-bottom:24px;
-                  border:1px solid ${color.border};">
-        <p style="margin:0 0 16px;font-size:11px;font-weight:700;letter-spacing:2px;
-                  text-transform:uppercase;color:${color.primary};">
-          What Happens Next
-        </p>
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-          ${stepsHtml}
-        </table>
-      </div>
-
-      <p style="margin:0 0 28px;font-size:14px;color:${color.textMuted};line-height:1.7;">
-        Our hiring team typically responds within <strong style="color:${color.text};">5–7 business days</strong>.
-        We appreciate your patience and look forward to learning more about you.
-      </p>
-
-      <table role="presentation" cellspacing="0" cellpadding="0">
-        <tr>
-          <td style="border-radius:999px;background:${gradient.header};">
-            <a href="${WEBSITE}"
-               style="display:inline-block;padding:13px 28px;font-size:13px;font-weight:600;
-                      color:white;text-decoration:none;letter-spacing:0.5px;font-family:${font.sans};">
-              Visit Our Website →
-            </a>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-
-  <tr>
-    <td style="padding:0 40px 32px;">
-      <p style="margin:0;font-size:14px;color:${color.textMuted};line-height:1.7;">
-        Warm regards,<br/>
-        <strong style="color:${color.text};font-family:${font.base};font-size:16px;font-weight:400;">
-          The ${COMPANY} Team
-        </strong>
-      </p>
-    </td>
-  </tr>
-  `;
-
-  return emailWrapper(emailCard(emailHeader("Application Received", "We'll be in touch soon"), body, emailFooter()));
-};
-
-// ─── Admin New Application Notification ──────────────────────────────────────
-export const adminCareerTemplate = ({ name, email, phone, role }) => {
-  const fields = [
-    { label: "Applicant Name", value: name, icon: "👤" },
-    { label: "Email Address", value: `<a href="mailto:${email}" style="color:${color.primary};text-decoration:none;">${email}</a>`, icon: "✉️" },
-    { label: "Phone Number", value: `<a href="tel:${phone}" style="color:${color.primary};text-decoration:none;">${phone}</a>`, icon: "📞" },
-    { label: "Position Applied", value: `<strong style="color:${color.text};">${role}</strong>`, icon: "💼" },
-  ];
-
-  const fieldsHtml = fields
-    .map(
-      (f) => `
+const buildFields = (fields) =>
+  fields
+    .map((f, i) => {
+      const isLast = i === fields.length - 1;
+      return `
     <tr>
-      <td style="padding:14px 0;border-bottom:1px solid ${color.border};">
+      <td style="padding:16px 0;${!isLast ? `border-bottom:1px solid ${color.border};` : ""}">
         <table role="presentation" cellspacing="0" cellpadding="0" width="100%">
           <tr>
-            <td width="36" valign="top" style="padding-right:12px;padding-top:2px;font-size:16px;">
+            <td width="36" valign="top" style="padding-right:12px;padding-top:1px;font-size:16px;">
               ${f.icon}
             </td>
             <td>
-              <p style="margin:0 0 3px;font-size:11px;font-weight:700;letter-spacing:1.5px;
+              <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:1.5px;
                          text-transform:uppercase;color:${color.textLight};font-family:${font.sans};">
                 ${f.label}
               </p>
@@ -197,9 +254,91 @@ export const adminCareerTemplate = ({ name, email, phone, role }) => {
           </tr>
         </table>
       </td>
-    </tr>`
-    )
+    </tr>`;
+    })
     .join("");
+
+// ─── User Career Application Confirmation ────────────────────────────────────
+export const userCareerTemplate = ({ name, role }) => {
+  const steps = [
+    "Application received &amp; under review",
+    "Shortlisting of candidates",
+    "Interview scheduling &amp; coordination",
+  ];
+
+  const body = `
+  <tr>
+    <td style="padding:40px 40px 0;">
+      <p style="margin:0 0 8px;font-size:20px;font-family:${font.base};color:${color.text};font-weight:400;">
+        Dear ${name},
+      </p>
+      <p style="margin:0 0 28px;font-size:14px;color:${color.textMuted};line-height:1.7;">
+        Thank you for your interest in the <strong style="color:${color.text};font-weight:600;">${role}</strong>
+        position at ${COMPANY}. We have received your application and are pleased to confirm receipt.
+      </p>
+
+      ${stepsCard("What Happens Next", buildSteps(steps))}
+
+      <p style="margin:0 0 32px;font-size:14px;color:${color.textMuted};line-height:1.7;">
+        Our hiring team typically responds within <strong style="color:${color.text};">5–7 business days</strong>.
+        We appreciate your patience and look forward to learning more about you.
+      </p>
+
+      ${emailButton("Visit Our Website →", WEBSITE)}
+    </td>
+  </tr>
+
+  ${emailDivider(32)}
+
+  <tr>
+    <td style="padding:0 40px 40px;">
+      <p style="margin:0;font-size:14px;color:${color.textMuted};line-height:1.7;">
+        Warm regards,<br/>
+        <span style="color:${color.text};font-family:${font.base};font-size:16px;font-weight:400;">
+          The ${COMPANY} Team
+        </span>
+      </p>
+    </td>
+  </tr>`;
+
+  return emailWrapper(
+    emailCard(
+      emailHeader("Application Received", "We'll be in touch soon"),
+      body,
+      emailFooter()
+    ),
+    `Your application for ${role} at ${COMPANY} has been received.`
+  );
+};
+
+// ─── Admin New Application Notification ──────────────────────────────────────
+export const adminCareerTemplate = ({ name, email, phone, role }) => {
+  const fields = [
+    { label: "Applicant Name", value: name, icon: "👤" },
+    {
+      label: "Email Address",
+      value: `<a href="mailto:${email}" style="color:${color.primary};text-decoration:none;">${email}</a>`,
+      icon: "✉️",
+    },
+    {
+      label: "Phone Number",
+      value: phone
+        ? `<a href="tel:${phone}" style="color:${color.primary};text-decoration:none;">${phone}</a>`
+        : `<span style="color:${color.textLight};font-style:italic;">Not provided</span>`,
+      icon: "📞",
+    },
+    {
+      label: "Position Applied",
+      value: `<strong style="color:${color.text};">${role}</strong>`,
+      icon: "💼",
+    },
+  ];
+
+  const dateStr = new Date().toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 
   const body = `
   <tr>
@@ -209,42 +348,28 @@ export const adminCareerTemplate = ({ name, email, phone, role }) => {
         Please review their details below and take appropriate action.
       </p>
 
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0"
-        style="background:${color.bgOuter};border-radius:12px;padding:0 20px;border:1px solid ${color.border};">
-        <tr><td style="padding:4px 0;">${""}</td></tr>
-        ${fieldsHtml}
-        <tr><td style="padding:4px 0;">${""}</td></tr>
-      </table>
+      ${dataCard(buildFields(fields))}
     </td>
   </tr>
 
   <tr>
-    <td style="padding:0 40px 32px;">
-      <div style="background:${color.primaryLight};border-left:4px solid ${color.primary};
-                  border-radius:0 8px 8px 0;padding:14px 18px;">
-        <p style="margin:0;font-size:13px;color:${color.primaryDark};font-weight:600;line-height:1.6;">
-          Action Required — Please review this application and reach out to schedule an interview if suitable.
-        </p>
-      </div>
+    <td style="padding:0 40px 28px;">
+      ${emailCallout("Action Required — Please review this application and reach out to schedule an interview if suitable.", "action")}
     </td>
   </tr>
 
   <tr>
-    <td style="padding:0 40px 32px;">
-      <table role="presentation" cellspacing="0" cellpadding="0">
-        <tr>
-          <td style="border-radius:999px;background:${gradient.header};margin-right:12px;">
-            <a href="mailto:${email}"
-               style="display:inline-block;padding:12px 24px;font-size:13px;font-weight:600;
-                      color:white;text-decoration:none;letter-spacing:0.5px;font-family:${font.sans};">
-              Reply to Applicant →
-            </a>
-          </td>
-        </tr>
-      </table>
+    <td style="padding:0 40px 36px;">
+      ${emailButton(`Reply to ${name} →`, `mailto:${email}`)}
     </td>
-  </tr>
-  `;
+  </tr>`;
 
-  return emailWrapper(emailCard(emailHeader("New Application", `Received · ${new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`), body, emailFooter()));
+  return emailWrapper(
+    emailCard(
+      emailHeader("New Application", `Received · ${dateStr}`),
+      body,
+      emailFooter()
+    ),
+    `New career application from ${name} for ${role}.`
+  );
 };
