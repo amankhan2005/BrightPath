@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import contactRoutes from "./routes/contactRoutes.js";
+import careerRoutes from "./routes/careerRoutes.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(express.json());
 
 // ✅ Routes
 app.use("/api/contact", contactRoutes);
+app.use("/api/careers", careerRoutes);
 
 app.get("/", (req, res) => {
   res.send("API Running 🚀");

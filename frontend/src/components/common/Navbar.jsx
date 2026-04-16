@@ -7,6 +7,7 @@ const navLinks = [
   { label: "About", to: "/about-us" },
   { label: "Services", to: "/services" },
   { label: "FAQ", to: "/faq" },
+  { label: "Careers", to: "/careers" },
 ];
 
 function Navbar() {
@@ -44,8 +45,8 @@ function Navbar() {
                   textDecoration: "none",
                   transition: "background .15s, color .15s",
                 }}
-                onMouseEnter={e => { if (!isActive) { e.target.style.background = "#E8F0FA"; e.target.style.color = "#2C5F9E"; }}}
-                onMouseLeave={e => { if (!isActive) { e.target.style.background = "transparent"; e.target.style.color = "#4A5568"; }}}
+                onMouseEnter={e => { if (!isActive) { e.target.style.background = "#E8F0FA"; e.target.style.color = "#2C5F9E"; } }}
+                onMouseLeave={e => { if (!isActive) { e.target.style.background = "transparent"; e.target.style.color = "#4A5568"; } }}
               >
                 {link.label}
               </Link>
@@ -54,46 +55,51 @@ function Navbar() {
         </nav>
 
         {/* Desktop Actions */}
-     <div className="hidden md:flex items-center gap-3">
-<a
-  href="tel:+14439003895"
-  aria-label="Call +1 443 900 3895"
-  style={{
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "7px",
-    fontSize: "13px",
-    fontWeight: 500,
-    color: "#2C5F9E",
-    border: "1.5px solid #2C5F9E",
-    padding: "8px 16px",
-    borderRadius: "100px",
-    textDecoration: "none",
-    background: "#fff",
-    transition: "all 0.2s ease",
-    cursor: "pointer",
-  }}
-  onMouseEnter={(e) => {
-    e.currentTarget.style.background = "#2C5F9E";
-    e.currentTarget.style.color = "#fff";
-  }}
-  onMouseLeave={(e) => {
-    e.currentTarget.style.background = "#fff";
-    e.currentTarget.style.color = "#2C5F9E";
-  }}
->
-   +1 (443) 900-3895
-</a>
+        <div className="hidden md:flex items-center gap-3">
+          <a
+            href="tel:+14109003895"
+            aria-label="Call +1 410 900 3895"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "7px",
+              fontSize: "13px",
+              fontWeight: 500,
+              color: "#2C5F9E",
+              border: "1.5px solid #2C5F9E",
+              padding: "8px 16px",
+              borderRadius: "100px",
+              textDecoration: "none",
+              background: "#fff",
+              transition: "all 0.2s ease",
+              cursor: "pointer",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#2C5F9E";
+              e.currentTarget.style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "#fff";
+              e.currentTarget.style.color = "#2C5F9E";
+            }}
+          >
+            +1 (410) 900-3895
+          </a>
+
           <Link
             to="/contact-us"
             style={{
-              fontSize: "13px", fontWeight: 600, color: "#fff",
-              background: "#5DBB2E", padding: "9px 20px",
-              borderRadius: "100px", textDecoration: "none",
+              fontSize: "13px",
+              fontWeight: 600,
+              color: "#fff",
+              background: "#5DBB2E",
+              padding: "9px 20px",
+              borderRadius: "100px",
+              textDecoration: "none",
               transition: "background .15s",
             }}
-            onMouseEnter={e => e.currentTarget.style.background = "#3D8F18"}
-            onMouseLeave={e => e.currentTarget.style.background = "#5DBB2E"}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#3D8F18")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "#5DBB2E")}
           >
             Get Started →
           </Link>
@@ -132,24 +138,24 @@ function Navbar() {
             );
           })}
           <div style={{ marginTop: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>
-            
-<a
-  href="tel:+14439003895"
-  aria-label="Call 1 443 900 3895"
-  style={{
-    fontSize: "13px",
-    fontWeight: 500,
-    color: "#2C5F9E",
-    border: "1.5px solid #2C5F9E",
-    padding: "10px 16px",
-    borderRadius: "100px",
-    textAlign: "center",
-    textDecoration: "none",
-    display: "inline-block",
-  }}
->
-   Call: +1 (443) 900-3895
-</a>
+
+            <a
+              href="tel:+14109003895"
+              aria-label="Call +1 410 900 3895"
+              style={{
+                fontSize: "13px",
+                fontWeight: 500,
+                color: "#2C5F9E",
+                border: "1.5px solid #2C5F9E",
+                padding: "10px 16px",
+                borderRadius: "100px",
+                textAlign: "center",
+                textDecoration: "none",
+                display: "inline-block",
+              }}
+            >
+              Call: +1 (410) 900-3895
+            </a>
             <Link
               to="/contact-us"
               onClick={() => setIsOpen(false)}

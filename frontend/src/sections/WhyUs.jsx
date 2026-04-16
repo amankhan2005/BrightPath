@@ -218,7 +218,7 @@ function CoreValues() {
   return (
     <section
       className="relative overflow-hidden"
-      style={{ background: "#FAFAF8", fontFamily: "'Inter', sans-serif" }}
+      style={{ background: "#ffffff", fontFamily: "'Inter', sans-serif" }}
     >
       {/* Decorative blurs */}
       <div

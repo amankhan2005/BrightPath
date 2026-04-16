@@ -23,8 +23,8 @@ const contactInfo = [
       </svg>
     ),
     label: "Phone",
-    text: "+1 (443) 900-3895",
-    href: "tel:+14439003895",
+    text: "+1 (410) 900-3895",
+    href: "tel:+14109003895",
   },
   {
     icon: (
@@ -208,7 +208,7 @@ function Contact() {
               ))}
             </div>
 
-         
+
           </motion.div>
 
           {/* RIGHT FORM */}

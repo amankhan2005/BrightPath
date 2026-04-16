@@ -5,6 +5,8 @@ import About from "../pages/About";
 import Services from "../pages/Services";
 import Contact from "../pages/Contact";
 import FAQ from "../pages/FAQ";
+import Career from "../pages/CareerPage";
+import InsurancePage from "../pages/InsurancePage";
 
 import NotFound from "../pages/NotFound";
 
@@ -27,7 +29,9 @@ export default function AppRoutes() {
         <Route path="/about-us" element={<About />} />
         <Route path="/services" element={<Services />} />
         <Route path="/faq" element={<FAQ />} />
+        <Route path="/careers" element={<Career />} />
         <Route path="/contact-us" element={<Contact />} />
+        <Route path="/insurance" element={<InsurancePage />} />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />

@@ -117,7 +117,7 @@ function CTA() {
           >
             {/* Call Button */}
             <a
-              href="tel:+14439003895"
+              href="tel:+14109003895"
               className="group inline-flex items-center justify-center px-8 py-4 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.04] active:scale-[0.98]"
               style={{
                 background: "#ffffff",

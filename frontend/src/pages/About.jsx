@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import Container from "../components/common/Container";
 import { Link } from "react-router-dom";
+import Insurance from "../sections/Insurance";
 
 const PINK = "#E8194B";
 const ORANGE = "#F06A00";
@@ -374,8 +375,7 @@ function About() {
           </div>
         </Container>
       </section>
-
-      {/* ─── MISSION / VISION ─── */}
+       {/* ─── MISSION / VISION ─── */}
       <section className="py-16 md:py-28 bg-white relative overflow-hidden">
         {/* Decorative blurs */}
         <div
@@ -588,6 +588,8 @@ function About() {
         </Container>
       </section>
 
+      <Insurance />
+
       {/* ─── CTA ─── */}
       <section
         className="relative overflow-hidden"
@@ -672,7 +674,7 @@ function About() {
             className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10"
           >
             <a
-              href="tel:+14439003895"
+              href="tel:+14109003895"
               className="group inline-flex items-center justify-center px-8 py-4 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-[1.04] active:scale-[0.98]"
               style={{
                 background: "#ffffff",
